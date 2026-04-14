@@ -13,13 +13,19 @@ const metrics = [
 export default function KpiGrid() {
   return (
     <section>
-      <p className="text-muted-foreground tracking-widest-custom text-xs uppercase font-heading mb-4">Impact & Scale</p>
+      <div className="flex items-center justify-between mb-4">
+        <p className="text-muted-foreground tracking-widest-custom text-xs uppercase font-heading">Impact & Scale</p>
+        <span className="text-xs text-muted-foreground italic border border-border rounded-full px-3 py-1">Long-term targets</span>
+      </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {metrics.map((m, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.08 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ delay: i * 0.08, duration: 0.4 }}
+            whileHover={{ y: -4, transition: { duration: 0.2 } }}
             className="rounded-xl border border-border bg-card p-4 text-center hover:border-primary/40 transition-colors"
           >
             <m.icon className={`mx-auto mb-2 ${m.color}`} size={22} />

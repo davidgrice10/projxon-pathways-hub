@@ -18,9 +18,11 @@ export default function ProgramStack() {
         {layers.map((layer, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.15 }}
-            className={`rounded-xl border-l-4 ${layer.color} bg-card border border-border p-4`}
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-30px" }}
+            transition={{ delay: i * 0.12, duration: 0.4 }}
+            className={`rounded-xl border-l-4 ${layer.color} bg-card border border-border p-4 hover:bg-muted/30 transition-colors`}
           >
             <div className="flex items-center gap-2 mb-2">
               <layer.icon size={16} className="text-foreground" />
