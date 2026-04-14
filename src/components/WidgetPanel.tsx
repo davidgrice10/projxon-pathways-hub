@@ -31,6 +31,11 @@ export default function WidgetPanel({ title, subtitle, icon: Icon, items, color 
   return (
     <motion.div
       layout
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-30px" }}
+      transition={{ duration: 0.4 }}
+      whileHover={{ y: -2, transition: { duration: 0.2 } }}
       className={`rounded-xl border bg-card p-5 transition-colors cursor-pointer ${borderColorMap[color]}`}
       onClick={() => setExpanded(!expanded)}
     >
