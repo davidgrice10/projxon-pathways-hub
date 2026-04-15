@@ -27,12 +27,9 @@ export default function Index() {
         </motion.div>
 
         {/* Ecosystem Map */}
-        <motion.section
-          className="rounded-2xl border border-border bg-card p-6 md:p-10"
-          variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}
-        >
+        <section className="rounded-2xl border border-border bg-card p-6 md:p-10">
           <EcosystemMap />
-        </motion.section>
+        </section>
 
         {/* Program Stack */}
         <motion.section
