@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback, forwardRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, MousePointerClick } from "lucide-react";
 
@@ -15,6 +15,7 @@ interface Connection {
   from: string;
   to: string;
   dashed?: boolean;
+  tint: "blue" | "green" | "gold" | "orange";
 }
 
 const b2cNodes: EcoNode[] = [
@@ -35,22 +36,26 @@ const projxonNode: EcoNode = { id: "projxon", label: "PROJXON", subtitle: "Incub
 const momentumNode: EcoNode = { id: "momentum", label: "MOMENTUM", subtitle: "Performance System", color: "navy", details: ["Learning · Community · Implementation", "Powered by Ivory.io (GoHighLevel)", "Central performance hub", "Connects B2C and B2B tracks"] };
 const mopNode: EcoNode = { id: "mop", label: "Momentum Office Parties", subtitle: "Networking & Events", color: "orange", details: ["In-person networking events", "Professional development events", "Community building", "Culture & connection"] };
 
-const allNodes = [projxonNode, ...b2cNodes, momentumNode, ...b2bNodes, mopNode];
-
 const connections: Connection[] = [
-  { from: "projxon", to: "phelan" },
-  { from: "projxon", to: "momentum" },
-  { from: "projxon", to: "mcs" },
-  { from: "phelan", to: "mip", dashed: true },
-  { from: "mip", to: "gap", dashed: true },
-  { from: "gap", to: "mcp", dashed: true },
-  { from: "mcp", to: "momentum" },
-  { from: "momentum", to: "mcs" },
-  { from: "momentum", to: "mos" },
-  { from: "momentum", to: "michelin" },
-  { from: "momentum", to: "orka" },
-  { from: "momentum", to: "mop" },
-  { from: "michelin", to: "orka", dashed: true },
+  // From PROJXON (gold hub connections)
+  { from: "projxon", to: "phelan", tint: "gold" },
+  { from: "projxon", to: "momentum", tint: "gold" },
+  { from: "projxon", to: "mcs", tint: "gold" },
+  // B2C internal chain (blue)
+  { from: "phelan", to: "mip", dashed: true, tint: "blue" },
+  { from: "mip", to: "gap", dashed: true, tint: "blue" },
+  { from: "gap", to: "mcp", dashed: true, tint: "blue" },
+  // B2C → Momentum (gold)
+  { from: "mcp", to: "momentum", tint: "gold" },
+  // Momentum → B2B (gold hub)
+  { from: "momentum", to: "mcs", tint: "gold" },
+  { from: "momentum", to: "mos", tint: "gold" },
+  { from: "momentum", to: "michelin", tint: "gold" },
+  { from: "momentum", to: "orka", tint: "gold" },
+  // Momentum → MOP (orange)
+  { from: "momentum", to: "mop", tint: "orange" },
+  // B2B internal (green)
+  { from: "michelin", to: "orka", dashed: true, tint: "green" },
 ];
 
 const borderColors: Record<string, string> = {
@@ -69,73 +74,117 @@ const glowClasses: Record<string, string> = {
   navy: "glow-gold",
 };
 
+// Color-coded stroke colors for connections
+const tintColors: Record<string, { base: string; glow: string }> = {
+  blue: { base: "hsl(210, 55%, 45%)", glow: "hsl(210, 70%, 60%)" },
+  green: { base: "hsl(145, 35%, 42%)", glow: "hsl(145, 50%, 58%)" },
+  gold: { base: "hsl(43, 55%, 48%)", glow: "hsl(43, 75%, 62%)" },
+  orange: { base: "hsl(30, 60%, 48%)", glow: "hsl(30, 75%, 62%)" },
+};
+
+type Side = "top" | "bottom" | "left" | "right";
+interface AnchorPoint { x: number; y: number }
+
+/** Get a specific edge anchor on a node rect (relative to container). */
+function getAnchor(rect: DOMRect, containerRect: DOMRect, side: Side): AnchorPoint {
+  const cx = rect.left + rect.width / 2 - containerRect.left;
+  const cy = rect.top + rect.height / 2 - containerRect.top;
+  switch (side) {
+    case "top": return { x: cx, y: rect.top - containerRect.top };
+    case "bottom": return { x: cx, y: rect.bottom - containerRect.top };
+    case "left": return { x: rect.left - containerRect.left, y: cy };
+    case "right": return { x: rect.right - containerRect.left, y: cy };
+  }
+}
+
+/** Choose the best anchor sides for two nodes to avoid overlapping boxes. */
+function chooseSides(fromRect: DOMRect, toRect: DOMRect): [Side, Side] {
+  const fromCx = fromRect.left + fromRect.width / 2;
+  const fromCy = fromRect.top + fromRect.height / 2;
+  const toCx = toRect.left + toRect.width / 2;
+  const toCy = toRect.top + toRect.height / 2;
+
+  const dx = toCx - fromCx;
+  const dy = toCy - fromCy;
+
+  // Primarily horizontal
+  if (Math.abs(dx) > Math.abs(dy) * 0.6) {
+    if (dx > 0) return ["right", "left"];
+    return ["left", "right"];
+  }
+  // Primarily vertical
+  if (dy > 0) return ["bottom", "top"];
+  return ["top", "bottom"];
+}
+
+/** Build a smooth cubic bezier path between two anchor points. */
+function buildCurvePath(from: AnchorPoint, fromSide: Side, to: AnchorPoint, toSide: Side): string {
+  const dist = Math.sqrt((to.x - from.x) ** 2 + (to.y - from.y) ** 2);
+  const tension = Math.min(dist * 0.45, 120);
+
+  const cp1 = { ...from };
+  const cp2 = { ...to };
+
+  switch (fromSide) {
+    case "top": cp1.y -= tension; break;
+    case "bottom": cp1.y += tension; break;
+    case "left": cp1.x -= tension; break;
+    case "right": cp1.x += tension; break;
+  }
+  switch (toSide) {
+    case "top": cp2.y -= tension; break;
+    case "bottom": cp2.y += tension; break;
+    case "left": cp2.x -= tension; break;
+    case "right": cp2.x += tension; break;
+  }
+
+  return `M ${from.x} ${from.y} C ${cp1.x} ${cp1.y}, ${cp2.x} ${cp2.y}, ${to.x} ${to.y}`;
+}
+
+interface CurvedLine {
+  path: string;
+  tint: string;
+  dashed?: boolean;
+  fromId: string;
+  toId: string;
+}
+
 export default function EcosystemMap() {
   const [selected, setSelected] = useState<EcoNode | null>(null);
+  const [hoveredConn, setHoveredConn] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const nodeRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-  const [lines, setLines] = useState<{ x1: number; y1: number; x2: number; y2: number; dashed?: boolean }[]>([]);
+  const [curves, setCurves] = useState<CurvedLine[]>([]);
 
-  // Calculate SVG connection lines from DOM positions
-  useEffect(() => {
-    const calculate = () => {
-      if (!containerRef.current) return;
-      const containerRect = containerRef.current.getBoundingClientRect();
-      const newLines: typeof lines = [];
+  const calculate = useCallback(() => {
+    if (!containerRef.current) return;
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const newCurves: CurvedLine[] = [];
 
-      for (const conn of connections) {
-        const fromEl = nodeRefs.current[conn.from];
-        const toEl = nodeRefs.current[conn.to];
-        if (!fromEl || !toEl) continue;
+    for (const conn of connections) {
+      const fromEl = nodeRefs.current[conn.from];
+      const toEl = nodeRefs.current[conn.to];
+      if (!fromEl || !toEl) continue;
 
-        const fromRect = fromEl.getBoundingClientRect();
-        const toRect = toEl.getBoundingClientRect();
+      const fromRect = fromEl.getBoundingClientRect();
+      const toRect = toEl.getBoundingClientRect();
 
-        const fromCx = fromRect.left + fromRect.width / 2 - containerRect.left;
-        const fromCy = fromRect.top + fromRect.height / 2 - containerRect.top;
-        const toCx = toRect.left + toRect.width / 2 - containerRect.left;
-        const toCy = toRect.top + toRect.height / 2 - containerRect.top;
+      const [fromSide, toSide] = chooseSides(fromRect, toRect);
+      const fromAnchor = getAnchor(fromRect, containerRect, fromSide);
+      const toAnchor = getAnchor(toRect, containerRect, toSide);
+      const path = buildCurvePath(fromAnchor, fromSide, toAnchor, toSide);
 
-        // Calculate edge intersection points
-        const dx = toCx - fromCx;
-        const dy = toCy - fromCy;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist === 0) continue;
+      newCurves.push({ path, tint: conn.tint, dashed: conn.dashed, fromId: conn.from, toId: conn.to });
+    }
 
-        const nx = dx / dist;
-        const ny = dy / dist;
-
-        // From edge
-        const fHw = fromRect.width / 2;
-        const fHh = fromRect.height / 2;
-        const fScaleX = Math.abs(nx) > 0.001 ? fHw / Math.abs(nx) : Infinity;
-        const fScaleY = Math.abs(ny) > 0.001 ? fHh / Math.abs(ny) : Infinity;
-        const fScale = Math.min(fScaleX, fScaleY);
-        const x1 = fromCx + nx * fScale;
-        const y1 = fromCy + ny * fScale;
-
-        // To edge
-        const tHw = toRect.width / 2;
-        const tHh = toRect.height / 2;
-        const tScaleX = Math.abs(nx) > 0.001 ? tHw / Math.abs(nx) : Infinity;
-        const tScaleY = Math.abs(ny) > 0.001 ? tHh / Math.abs(ny) : Infinity;
-        const tScale = Math.min(tScaleX, tScaleY);
-        const x2 = toCx - nx * tScale;
-        const y2 = toCy - ny * tScale;
-
-        newLines.push({ x1, y1, x2, y2, dashed: conn.dashed });
-      }
-
-      setLines(newLines);
-    };
-
-    // Calculate after layout settles
-    const timer = setTimeout(calculate, 600);
-    window.addEventListener("resize", calculate);
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener("resize", calculate);
-    };
+    setCurves(newCurves);
   }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(calculate, 500);
+    window.addEventListener("resize", calculate);
+    return () => { clearTimeout(timer); window.removeEventListener("resize", calculate); };
+  }, [calculate]);
 
   const setNodeRef = (id: string) => (el: HTMLButtonElement | null) => {
     nodeRefs.current[id] = el;
@@ -162,31 +211,84 @@ export default function EcosystemMap() {
 
       {/* Map container */}
       <div ref={containerRef} className="relative max-w-5xl mx-auto" style={{ minHeight: 480 }}>
-        {/* SVG overlay for connection lines */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
+        {/* SVG — connections layer (above bg, below node borders) */}
+        <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 1 }}>
           <defs>
-            <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="hsl(43, 50%, 45%)" stopOpacity="0.3" />
-              <stop offset="50%" stopColor="hsl(43, 65%, 55%)" stopOpacity="0.7" />
-              <stop offset="100%" stopColor="hsl(43, 50%, 45%)" stopOpacity="0.3" />
-            </linearGradient>
+            {/* Glow filters per tint */}
+            {Object.entries(tintColors).map(([key, { glow }]) => (
+              <filter key={key} id={`conn-glow-${key}`} x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="4" result="blur" />
+                <feFlood floodColor={glow} floodOpacity="0.5" />
+                <feComposite in2="blur" operator="in" />
+                <feMerge>
+                  <feMergeNode />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            ))}
           </defs>
-          {lines.map((line, i) => (
-            <motion.line
-              key={i}
-              x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2}
-              stroke="url(#lineGrad)"
-              strokeWidth={1.5}
-              strokeDasharray={line.dashed ? "6 4" : undefined}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8 + i * 0.06, duration: 0.4 }}
-            />
-          ))}
+
+          {/* Animated pulse definition */}
+          <style>{`
+            @keyframes connPulse {
+              0%, 100% { opacity: 0.55; }
+              50% { opacity: 0.8; }
+            }
+          `}</style>
+
+          {curves.map((curve, i) => {
+            const colors = tintColors[curve.tint] || tintColors.gold;
+            const isHovered = hoveredConn === i;
+
+            return (
+              <g key={i}>
+                {/* Subtle glow underlay (always visible for hub connections) */}
+                {(curve.fromId === "momentum" || curve.toId === "momentum") && (
+                  <motion.path
+                    d={curve.path}
+                    fill="none"
+                    stroke={colors.glow}
+                    strokeWidth={4}
+                    strokeOpacity={isHovered ? 0.4 : 0.12}
+                    strokeDasharray={curve.dashed ? "6 4" : undefined}
+                    filter={isHovered ? `url(#conn-glow-${curve.tint})` : undefined}
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 1 }}
+                    transition={{ delay: 0.6 + i * 0.06, duration: 0.6, ease: "easeOut" as const }}
+                  />
+                )}
+                {/* Main stroke */}
+                <motion.path
+                  d={curve.path}
+                  fill="none"
+                  stroke={isHovered ? colors.glow : colors.base}
+                  strokeWidth={isHovered ? 2.5 : 1.8}
+                  strokeOpacity={isHovered ? 0.95 : 0.6}
+                  strokeDasharray={curve.dashed ? "6 4" : undefined}
+                  strokeLinecap="round"
+                  filter={isHovered ? `url(#conn-glow-${curve.tint})` : undefined}
+                  style={!isHovered ? { animation: "connPulse 4s ease-in-out infinite", animationDelay: `${i * 0.3}s` } : undefined}
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  animate={{ pathLength: 1, opacity: 1 }}
+                  transition={{ delay: 0.6 + i * 0.06, duration: 0.6, ease: "easeOut" as const }}
+                />
+                {/* Invisible fat hitbox for hover */}
+                <path
+                  d={curve.path}
+                  fill="none"
+                  stroke="transparent"
+                  strokeWidth={16}
+                  style={{ pointerEvents: "stroke", cursor: "pointer" }}
+                  onMouseEnter={() => setHoveredConn(i)}
+                  onMouseLeave={() => setHoveredConn(null)}
+                />
+              </g>
+            );
+          })}
         </svg>
 
-        {/* Grid layout: B2C | Center | B2B */}
-        <div className="grid grid-cols-[1fr_280px_1fr] gap-6 relative" style={{ zIndex: 1 }}>
+        {/* Grid layout: B2C | Center | B2B — nodes above connections */}
+        <div className="grid grid-cols-[1fr_280px_1fr] gap-6 relative" style={{ zIndex: 2 }}>
           {/* B2C Column */}
           <div className="flex flex-col gap-3 pt-12">
             {b2cNodes.map((node, i) => (
@@ -196,22 +298,19 @@ export default function EcosystemMap() {
 
           {/* Center Column: PROJXON → MOMENTUM → MOP */}
           <div className="flex flex-col items-center gap-3">
-            {/* PROJXON */}
             <NodeBox node={projxonNode} onClick={() => setSelected(projxonNode)} delay={0.1} ref={setNodeRef("projxon")} />
-
-            {/* Spacer to vertically center momentum */}
             <div className="flex-1" />
 
             {/* MOMENTUM - large hub */}
             <motion.button
               ref={setNodeRef("momentum")}
               onClick={() => setSelected(momentumNode)}
-              className="w-full border-2 border-primary rounded-2xl py-8 px-6 text-center cursor-pointer backdrop-blur-sm transition-all hover:brightness-125"
+              className="w-full border-2 border-primary rounded-2xl py-8 px-6 text-center cursor-pointer backdrop-blur-sm transition-all hover:brightness-125 glow-gold"
               style={{ background: "radial-gradient(circle, hsl(220, 50%, 20%), hsl(220, 40%, 12%))" }}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3, type: "spring", stiffness: 160, damping: 18 }}
-              whileHover={{ scale: 1.04, boxShadow: "0 0 40px -5px hsl(43, 72%, 55%)" }}
+              whileHover={{ scale: 1.04, boxShadow: "0 0 50px -5px hsl(43, 72%, 55%)" }}
               whileTap={{ scale: 0.97 }}
             >
               <p className="font-heading font-bold text-lg text-gradient-gold leading-tight">MOMENTUM</p>
@@ -220,8 +319,6 @@ export default function EcosystemMap() {
             </motion.button>
 
             <div className="flex-1" />
-
-            {/* MOP */}
             <NodeBox node={mopNode} onClick={() => setSelected(mopNode)} delay={0.7} ref={setNodeRef("mop")} />
           </div>
 
@@ -275,16 +372,13 @@ export default function EcosystemMap() {
   );
 }
 
-// Forwarded ref NodeBox component
-import { forwardRef } from "react";
-
 const NodeBox = forwardRef<HTMLButtonElement, { node: EcoNode; onClick: () => void; delay?: number }>(
   ({ node, onClick, delay = 0 }, ref) => {
     return (
       <motion.button
         ref={ref}
         onClick={onClick}
-        className={`w-full border-2 ${borderColors[node.color]} backdrop-blur-sm transition-all hover:brightness-125 ${node.dashed ? "border-dashed" : ""} rounded-lg py-3 px-4 text-center cursor-pointer`}
+        className={`w-full border-2 ${borderColors[node.color]} backdrop-blur-sm transition-all hover:brightness-125 ${node.dashed ? "border-dashed" : ""} rounded-lg py-3 px-4 text-center cursor-pointer bg-card/80`}
         initial={{ opacity: 0, scale: 0.85 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay, type: "spring", stiffness: 180, damping: 18 }}
