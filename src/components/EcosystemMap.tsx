@@ -125,11 +125,12 @@ export default function EcosystemMap() {
       </div>
 
       {/* SVG Map */}
-      <div className="w-full max-w-4xl mx-auto">
+      <div className="w-full max-w-4xl mx-auto" style={{ aspectRatio: `${VB_W} / ${VB_H}` }}>
         <svg
           viewBox={`0 0 ${VB_W} ${VB_H}`}
-          className="w-full h-auto"
-          style={{ maxHeight: "65vh" }}
+          width="100%"
+          height="100%"
+          preserveAspectRatio="xMidYMid meet"
         >
           <defs>
             {glowFilters.map(c => (
