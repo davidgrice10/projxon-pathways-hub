@@ -46,7 +46,6 @@ export default function WidgetPanel({ title, subtitle, icon: Icon, items, color 
           </div>
           <div>
             <h3 className="font-heading font-semibold text-sm text-foreground">{title}</h3>
-            {subtitle && <p className="text-xs text-muted-foreground">{subtitle}</p>}
           </div>
         </div>
         {expanded ? <ChevronUp size={16} className="text-muted-foreground mt-1" /> : <ChevronDown size={16} className="text-muted-foreground mt-1" />}
@@ -58,6 +57,7 @@ export default function WidgetPanel({ title, subtitle, icon: Icon, items, color 
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
+            {subtitle && <p className="text-xs text-muted-foreground italic mb-1">{subtitle}</p>}
             {description && <p className="text-sm text-muted-foreground mt-3 mb-2">{description}</p>}
             <ul className="mt-3 space-y-2">
               {items.map((item, i) => (
