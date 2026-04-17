@@ -37,24 +37,25 @@ const momentumNode: EcoNode = { id: "momentum", label: "MOMENTUM", subtitle: "Pe
 const mopNode: EcoNode = { id: "mop", label: "Momentum Office Parties", subtitle: "Networking & Events", color: "orange", details: ["In-person networking events", "Professional development events", "Community building", "Culture & connection"] };
 
 const connections: Connection[] = [
-  // From PROJXON (gold hub connections)
-  { from: "projxon", to: "phelan", tint: "gold" },
+  // PROJXON → Momentum (parent hierarchy)
   { from: "projxon", to: "momentum", tint: "gold" },
-  { from: "projxon", to: "mcs", tint: "gold" },
-  // B2C internal chain (blue)
+  // Every B2C node connects directly to Momentum (soft blue)
+  { from: "phelan", to: "momentum", tint: "blue" },
+  { from: "mip", to: "momentum", tint: "blue" },
+  { from: "gap", to: "momentum", tint: "blue" },
+  { from: "mcp", to: "momentum", tint: "blue" },
+  // Every B2B node connects directly to Momentum (soft green)
+  { from: "mcs", to: "momentum", tint: "green" },
+  { from: "mos", to: "momentum", tint: "green" },
+  { from: "michelin", to: "momentum", tint: "green" },
+  { from: "orka", to: "momentum", tint: "green" },
+  // MOP → Momentum (orange accent)
+  { from: "mop", to: "momentum", tint: "orange" },
+  // Subtle internal B2C chain (dashed, low-emphasis)
   { from: "phelan", to: "mip", dashed: true, tint: "blue" },
   { from: "mip", to: "gap", dashed: true, tint: "blue" },
   { from: "gap", to: "mcp", dashed: true, tint: "blue" },
-  // B2C → Momentum (gold)
-  { from: "mcp", to: "momentum", tint: "gold" },
-  // Momentum → B2B (gold hub)
-  { from: "momentum", to: "mcs", tint: "gold" },
-  { from: "momentum", to: "mos", tint: "gold" },
-  { from: "momentum", to: "michelin", tint: "gold" },
-  { from: "momentum", to: "orka", tint: "gold" },
-  // Momentum → MOP (orange)
-  { from: "momentum", to: "mop", tint: "orange" },
-  // B2B internal (green)
+  // Subtle internal B2B link (dashed)
   { from: "michelin", to: "orka", dashed: true, tint: "green" },
 ];
 
