@@ -211,11 +211,10 @@ export default function EcosystemMap() {
       </div>
 
       {/* Map container */}
-      <div ref={containerRef} className="relative max-w-5xl mx-auto" style={{ minHeight: 480 }}>
+      <div ref={containerRef} className="relative max-w-5xl mx-auto" style={{ minHeight: 640 }}>
         {/* SVG — connections layer (above bg, below node borders) */}
         <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 1 }}>
           <defs>
-            {/* Glow filters per tint */}
             {Object.entries(tintColors).map(([key, { glow }]) => (
               <filter key={key} id={`conn-glow-${key}`} x="-20%" y="-20%" width="140%" height="140%">
                 <feGaussianBlur stdDeviation="4" result="blur" />
@@ -229,7 +228,6 @@ export default function EcosystemMap() {
             ))}
           </defs>
 
-          {/* Animated pulse definition */}
           <style>{`
             @keyframes connPulse {
               0%, 100% { opacity: 0.55; }
@@ -240,40 +238,38 @@ export default function EcosystemMap() {
           {curves.map((curve, i) => {
             const colors = tintColors[curve.tint] || tintColors.gold;
             const isHovered = hoveredConn === i;
+            const isHubLine = curve.fromId === "momentum" || curve.toId === "momentum";
 
             return (
               <g key={i}>
-                {/* Subtle glow underlay (always visible for hub connections) */}
-                {(curve.fromId === "momentum" || curve.toId === "momentum") && (
+                {isHubLine && (
                   <motion.path
                     d={curve.path}
                     fill="none"
                     stroke={colors.glow}
                     strokeWidth={4}
-                    strokeOpacity={isHovered ? 0.4 : 0.12}
+                    strokeOpacity={isHovered ? 0.4 : 0.14}
                     strokeDasharray={curve.dashed ? "6 4" : undefined}
                     filter={isHovered ? `url(#conn-glow-${curve.tint})` : undefined}
                     initial={{ pathLength: 0, opacity: 0 }}
                     animate={{ pathLength: 1, opacity: 1 }}
-                    transition={{ delay: 0.6 + i * 0.06, duration: 0.6, ease: "easeOut" as const }}
+                    transition={{ delay: 0.6 + i * 0.05, duration: 0.7, ease: "easeOut" as const }}
                   />
                 )}
-                {/* Main stroke */}
                 <motion.path
                   d={curve.path}
                   fill="none"
                   stroke={isHovered ? colors.glow : colors.base}
                   strokeWidth={isHovered ? 2.5 : 1.8}
-                  strokeOpacity={isHovered ? 0.95 : 0.6}
-                  strokeDasharray={curve.dashed ? "6 4" : undefined}
+                  strokeOpacity={isHovered ? 0.95 : (curve.dashed ? 0.4 : 0.65)}
+                  strokeDasharray={curve.dashed ? "5 5" : undefined}
                   strokeLinecap="round"
                   filter={isHovered ? `url(#conn-glow-${curve.tint})` : undefined}
                   style={!isHovered ? { animation: "connPulse 4s ease-in-out infinite", animationDelay: `${i * 0.3}s` } : undefined}
                   initial={{ pathLength: 0, opacity: 0 }}
                   animate={{ pathLength: 1, opacity: 1 }}
-                  transition={{ delay: 0.6 + i * 0.06, duration: 0.6, ease: "easeOut" as const }}
+                  transition={{ delay: 0.6 + i * 0.05, duration: 0.7, ease: "easeOut" as const }}
                 />
-                {/* Invisible fat hitbox for hover */}
                 <path
                   d={curve.path}
                   fill="none"
@@ -288,25 +284,23 @@ export default function EcosystemMap() {
           })}
         </svg>
 
-        {/* Grid layout: B2C | Center | B2B — nodes above connections */}
-        <div className="grid grid-cols-[1fr_280px_1fr] gap-6 relative" style={{ zIndex: 2 }}>
-          {/* B2C Column */}
-          <div className="flex flex-col gap-3 pt-12">
+        {/* Grid layout: B2C | Center | B2B — evenly distributed vertically */}
+        <div className="grid grid-cols-[1fr_300px_1fr] gap-10 relative items-stretch" style={{ zIndex: 2, minHeight: 640 }}>
+          {/* B2C Column — evenly distributed top to bottom */}
+          <div className="flex flex-col justify-between py-2">
             {b2cNodes.map((node, i) => (
               <NodeBox key={node.id} node={node} onClick={() => setSelected(node)} delay={0.15 + i * 0.08} ref={setNodeRef(node.id)} />
             ))}
           </div>
 
-          {/* Center Column: PROJXON → MOMENTUM → MOP */}
-          <div className="flex flex-col items-center gap-3">
+          {/* Center Column: PROJXON (top) → MOMENTUM (true center) → MOP (bottom) */}
+          <div className="flex flex-col items-center justify-between py-2">
             <NodeBox node={projxonNode} onClick={() => setSelected(projxonNode)} delay={0.1} ref={setNodeRef("projxon")} />
-            <div className="flex-1" />
 
-            {/* MOMENTUM - large hub */}
             <motion.button
               ref={setNodeRef("momentum")}
               onClick={() => setSelected(momentumNode)}
-              className="w-full border-2 border-primary rounded-2xl py-8 px-6 text-center cursor-pointer backdrop-blur-sm transition-all hover:brightness-125 glow-gold"
+              className="w-full border-2 border-primary rounded-2xl py-10 px-6 text-center cursor-pointer backdrop-blur-sm transition-all hover:brightness-125 glow-gold"
               style={{ background: "radial-gradient(circle, hsl(220, 50%, 20%), hsl(220, 40%, 12%))" }}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -314,17 +308,16 @@ export default function EcosystemMap() {
               whileHover={{ scale: 1.04, boxShadow: "0 0 50px -5px hsl(43, 72%, 55%)" }}
               whileTap={{ scale: 0.97 }}
             >
-              <p className="font-heading font-bold text-lg text-gradient-gold leading-tight">MOMENTUM</p>
+              <p className="font-heading font-bold text-xl text-gradient-gold leading-tight">MOMENTUM</p>
               <p className="text-muted-foreground text-xs mt-1">Performance System</p>
               <p className="text-muted-foreground text-[10px] mt-1 opacity-60">Learning · Community · Implementation</p>
             </motion.button>
 
-            <div className="flex-1" />
             <NodeBox node={mopNode} onClick={() => setSelected(mopNode)} delay={0.7} ref={setNodeRef("mop")} />
           </div>
 
-          {/* B2B Column */}
-          <div className="flex flex-col gap-3 pt-12">
+          {/* B2B Column — evenly distributed top to bottom */}
+          <div className="flex flex-col justify-between py-2">
             {b2bNodes.map((node, i) => (
               <NodeBox key={node.id} node={node} onClick={() => setSelected(node)} delay={0.15 + i * 0.08} ref={setNodeRef(node.id)} />
             ))}
