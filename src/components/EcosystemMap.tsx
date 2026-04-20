@@ -185,8 +185,17 @@ export default function EcosystemMap() {
   const [selected, setSelected] = useState<EcoNode | null>(null);
   const [hoveredConn, setHoveredConn] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const nodeRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [lines, setLines] = useState<OrthoLine[]>([]);
+
+  // Close on Escape
+  useEffect(() => {
+    if (!selected) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setSelected(null); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [selected]);
 
   const calculate = useCallback(() => {
     if (!containerRef.current) return;
