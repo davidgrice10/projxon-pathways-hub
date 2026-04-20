@@ -232,7 +232,7 @@ export default function EcosystemMap() {
   };
 
   return (
-    <div className="relative w-full">
+    <div ref={panelRef} className="relative w-full overflow-hidden">
       <div className="text-center mb-4">
         <p className="text-muted-foreground tracking-widest-custom text-sm uppercase mb-2 font-heading">Ecosystem Map</p>
         <h2 className="text-4xl font-bold font-heading text-gradient-gold">PROJXON</h2>
