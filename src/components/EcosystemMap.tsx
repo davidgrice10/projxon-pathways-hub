@@ -185,8 +185,17 @@ export default function EcosystemMap() {
   const [selected, setSelected] = useState<EcoNode | null>(null);
   const [hoveredConn, setHoveredConn] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const nodeRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [lines, setLines] = useState<OrthoLine[]>([]);
+
+  // Close on Escape
+  useEffect(() => {
+    if (!selected) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setSelected(null); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [selected]);
 
   const calculate = useCallback(() => {
     if (!containerRef.current) return;
@@ -223,7 +232,7 @@ export default function EcosystemMap() {
   };
 
   return (
-    <div className="relative w-full">
+    <div ref={panelRef} className="relative w-full overflow-hidden">
       <div className="text-center mb-4">
         <p className="text-muted-foreground tracking-widest-custom text-sm uppercase mb-2 font-heading">Ecosystem Map</p>
         <h2 className="text-4xl font-bold font-heading text-gradient-gold">PROJXON</h2>
@@ -351,16 +360,17 @@ export default function EcosystemMap() {
         </div>
       </div>
 
-      {/* Detail Modal */}
+      {/* Detail Modal — scoped to panel */}
       <AnimatePresence>
         {selected && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm"
+            className="absolute inset-0 z-20 flex items-center justify-center bg-background/80 backdrop-blur-sm"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             onClick={() => setSelected(null)}
           >
             <motion.div
-              className={`relative max-w-md w-full mx-4 rounded-xl border-[1.5px] ${borderColors[selected.color]} ${modalGlow[selected.color]} bg-card p-6`}
+              className={`relative rounded-xl border-[1.5px] ${borderColors[selected.color]} ${modalGlow[selected.color]} bg-card p-6 overflow-y-auto`}
+              style={{ width: "min(720px, 90%)", maxHeight: "80%" }}
               initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }}
               transition={{ type: "spring", damping: 22 }}
               onClick={e => e.stopPropagation()}
@@ -368,7 +378,7 @@ export default function EcosystemMap() {
               <button onClick={() => setSelected(null)} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors">
                 <X size={20} />
               </button>
-              <h3 className="font-heading text-xl font-bold text-gradient-gold">{selected.label}</h3>
+              <h3 className="font-heading text-xl font-bold text-gradient-gold pr-8">{selected.label}</h3>
               <p className="text-muted-foreground text-sm mb-4">{selected.subtitle}</p>
               <ul className="space-y-2">
                 {selected.details.map((d, i) => (
