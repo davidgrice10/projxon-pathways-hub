@@ -20,6 +20,9 @@ export default function Index() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 py-8 space-y-12">
+        {/* Brand */}
+        <BrandHeader />
+
         {/* Hero */}
         <HeroPanel />
 
