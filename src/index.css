@@ -70,7 +70,13 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Geologica', sans-serif;
+    font-stretch: 75%;
+    color: hsl(0 0% 100%);
+  }
+
+  .font-heading {
+    font-stretch: 75%;
   }
 }
 

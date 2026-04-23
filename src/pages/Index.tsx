@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import BrandHeader from "@/components/BrandHeader";
 import HeroPanel from "@/components/HeroPanel";
 import KpiGrid from "@/components/KpiGrid";
 import ImpactExplanation from "@/components/ImpactExplanation";
