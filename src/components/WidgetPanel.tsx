@@ -57,11 +57,10 @@ export default function WidgetPanel({ title, subtitle, icon: Icon, items, color 
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            {subtitle && <p className="text-xs text-muted-foreground italic mb-1">{subtitle}</p>}
-            {description && <p className="text-sm text-muted-foreground mt-3 mb-2">{description}</p>}
+            {subtitle && <p className="text-xs text-muted-foreground italic mt-2 mb-1">{subtitle}</p>}
             <ul className="mt-3 space-y-2">
-              {items.map((item, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-foreground">
+              {items.slice(0, 3).map((item, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-foreground leading-snug">
                   <span className={`mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 ${dotColorMap[color]}`} />
                   {item}
                 </li>
