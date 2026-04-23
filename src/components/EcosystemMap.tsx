@@ -2,13 +2,19 @@ import { useState, useRef, useEffect, useCallback, forwardRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, MousePointerClick } from "lucide-react";
 
+interface NodeSections {
+  what: string;
+  why: string;
+  connects: string[];
+}
+
 interface EcoNode {
   id: string;
   label: string;
   subtitle: string;
   color: "gold" | "blue" | "green" | "orange" | "navy";
   dashed?: boolean;
-  details: string[];
+  sections: NodeSections;
 }
 
 interface Connection {
@@ -19,22 +25,88 @@ interface Connection {
 }
 
 const b2cNodes: EcoNode[] = [
-  { id: "phelan", label: "The Phelan Focus", subtitle: "Top-of-Funnel Philosophy", color: "blue", details: ["Content & media brand", "Builds awareness and trust", "Attracts top-of-funnel talent", "Philosophy-driven engagement"] },
-  { id: "mip", label: "Momentum Internship", subtitle: "Entry Point", color: "blue", details: ["Standardized internship frameworks", "Company ratings (1-5 stars)", "Talent-employer matching", "Career readiness benchmark"] },
-  { id: "gap", label: "Growth Advisory", subtitle: "Development Layer", color: "blue", details: ["Professional development", "Mentorship and coaching", "Skill building pathways", "Career acceleration"] },
-  { id: "mcp", label: "Momentum Coaching", subtitle: "Coaching Layer", color: "blue", details: ["1-on-1 coaching sessions", "Leadership development", "Performance improvement", "Personal growth plans"] },
+  { id: "phelan", label: "The Phelan Focus", subtitle: "Top-of-Funnel Philosophy", color: "blue",
+    sections: {
+      what: "Content & media brand that drives ecosystem awareness.",
+      why: "Builds trust and attracts top-of-funnel talent.",
+      connects: ["Feeds into Momentum Internship", "Powers B2C talent pipeline"],
+    }
+  },
+  { id: "mip", label: "Momentum Internship", subtitle: "Entry Point", color: "blue",
+    sections: {
+      what: "Standardized internship platform with company ratings.",
+      why: "Sets a new benchmark for career readiness and matching.",
+      connects: ["Sits between Phelan and Growth Advisory", "Pipelines talent into Momentum"],
+    }
+  },
+  { id: "gap", label: "Growth Advisory", subtitle: "Development Layer", color: "blue",
+    sections: {
+      what: "Mentorship and skill-building for emerging professionals.",
+      why: "Accelerates careers beyond the internship stage.",
+      connects: ["Bridges Internship to Coaching", "Develops talent for partner orgs"],
+    }
+  },
+  { id: "mcp", label: "Momentum Coaching", subtitle: "Coaching Layer", color: "blue",
+    sections: {
+      what: "1-on-1 coaching for leadership and performance.",
+      why: "Deepens long-term growth and retention.",
+      connects: ["Top of B2C development stack", "Feeds leaders into Momentum"],
+    }
+  },
 ];
 
 const b2bNodes: EcoNode[] = [
-  { id: "mcs", label: "Consulting System", subtitle: "Client Delivery", color: "green", details: ["B2B consulting services", "Client project delivery", "Business transformation", "Revenue generation engine"] },
-  { id: "mos", label: "Operating System", subtitle: "Business Framework", color: "green", details: ["Internal operations framework", "Scalable business processes", "Team management systems", "Operational excellence"] },
-  { id: "michelin", label: "Michelin Method", subtitle: "Management & Production", color: "green", details: ["Michelin Management Method", "Michelin Production Process", "Quality standards framework", "Excellence methodology"] },
-  { id: "orka", label: "ORKA OS", subtitle: "B2B SaaS · In Development", color: "green", dashed: true, details: ["B2B SaaS Platform", "Currently in development", "Will productize consulting IP", "Scalable tech solution"] },
+  { id: "mcs", label: "Consulting System", subtitle: "Client Delivery", color: "green",
+    sections: {
+      what: "B2B consulting that delivers business transformation.",
+      why: "Primary revenue engine for the ecosystem.",
+      connects: ["Productized through ORKA OS", "Powered by Momentum frameworks"],
+    }
+  },
+  { id: "mos", label: "Operating System", subtitle: "Business Framework", color: "green",
+    sections: {
+      what: "Internal operations and team management framework.",
+      why: "Scales small teams into mature operations.",
+      connects: ["Underpins all consulting work", "Feeds back into Momentum"],
+    }
+  },
+  { id: "michelin", label: "Michelin Method", subtitle: "Management & Production", color: "green",
+    sections: {
+      what: "Quality and production methodology framework.",
+      why: "Sets the excellence standard across delivery.",
+      connects: ["Codified inside ORKA OS", "Used across consulting projects"],
+    }
+  },
+  { id: "orka", label: "ORKA OS", subtitle: "B2B SaaS · In Development", color: "green", dashed: true,
+    sections: {
+      what: "B2B SaaS platform productizing consulting IP.",
+      why: "Turns services into scalable software revenue.",
+      connects: ["Built on Michelin Method", "Distributed via Momentum"],
+    }
+  },
 ];
 
-const projxonNode: EcoNode = { id: "projxon", label: "PROJXON", subtitle: "Incubator & Parent System", color: "gold", details: ["Parent company and incubator", "Connects all ecosystem components", "Drives strategic vision", "Workforce development mission"] };
-const momentumNode: EcoNode = { id: "momentum", label: "MOMENTUM", subtitle: "Performance System", color: "navy", details: ["Learning · Community · Implementation", "Powered by Ivory.io (GoHighLevel)", "Central performance hub", "Connects B2C and B2B tracks"] };
-const mopNode: EcoNode = { id: "mop", label: "Momentum Office Parties", subtitle: "Networking & Events", color: "orange", details: ["In-person networking events", "Professional development events", "Community building", "Culture & connection"] };
+const projxonNode: EcoNode = { id: "projxon", label: "PROJXON", subtitle: "Incubator & Parent System", color: "gold",
+  sections: {
+    what: "Parent company incubating the full ecosystem.",
+    why: "Drives the workforce development mission.",
+    connects: ["Owns Momentum and all sub-brands", "Sets strategic direction"],
+  }
+};
+const momentumNode: EcoNode = { id: "momentum", label: "MOMENTUM", subtitle: "Performance System", color: "navy",
+  sections: {
+    what: "Central performance hub for learning and community.",
+    why: "Connects B2C talent and B2B business tracks.",
+    connects: ["Hub for every ecosystem node", "Powered by Ivory.io (GoHighLevel)"],
+  }
+};
+const mopNode: EcoNode = { id: "mop", label: "Momentum Office Parties", subtitle: "Networking & Events", color: "orange",
+  sections: {
+    what: "In-person networking and culture events.",
+    why: "Builds community across the ecosystem.",
+    connects: ["Activates Momentum members", "Bridges B2C and B2B audiences"],
+  }
+};
 
 const connections: Connection[] = [
   // PROJXON → Momentum (vertical hierarchy)
