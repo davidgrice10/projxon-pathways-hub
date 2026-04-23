@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import HeroPanel from "@/components/HeroPanel";
 import KpiGrid from "@/components/KpiGrid";
+import ImpactExplanation from "@/components/ImpactExplanation";
 import EcosystemMap from "@/components/EcosystemMap";
 import ProgramStack from "@/components/ProgramStack";
 import WidgetPanel from "@/components/WidgetPanel";
@@ -24,6 +25,7 @@ export default function Index() {
         {/* KPIs */}
         <motion.div variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}>
           <KpiGrid />
+          <ImpactExplanation />
         </motion.div>
 
         {/* Ecosystem Map */}
