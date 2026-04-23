@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ["Space Grotesk", "sans-serif"],
+        heading: ["Geologica", "sans-serif"],
         body: ["Inter", "sans-serif"],
       },
       colors: {

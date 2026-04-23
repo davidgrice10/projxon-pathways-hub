@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import BrandHeader from "@/components/BrandHeader";
 import HeroPanel from "@/components/HeroPanel";
 import KpiGrid from "@/components/KpiGrid";
 import ImpactExplanation from "@/components/ImpactExplanation";
@@ -19,6 +20,9 @@ export default function Index() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 py-8 space-y-12">
+        {/* Brand */}
+        <BrandHeader />
+
         {/* Hero */}
         <HeroPanel />
 

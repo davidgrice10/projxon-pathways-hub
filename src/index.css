@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geologica:wdth,wght@75,300..700&family=Inter:wght@300;400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -70,7 +70,13 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Geologica', sans-serif;
+    font-stretch: 75%;
+    color: hsl(0 0% 100%);
+  }
+
+  .font-heading {
+    font-stretch: 75%;
   }
 }
 
