@@ -2,12 +2,12 @@ import { motion } from "framer-motion";
 import { DollarSign, Users, GraduationCap, Briefcase, UserCheck, UserCog } from "lucide-react";
 
 const metrics = [
-  { label: "Projected Revenue", value: "$500M+", icon: DollarSign, color: "text-primary" },
   { label: "People Impacted", value: "5,000,000+", icon: Users, color: "text-eco-blue-light" },
+  { label: "Employment Partners", value: "50,000+", icon: Briefcase, color: "text-eco-orange-light" },
   { label: "University Partners", value: "500+", icon: GraduationCap, color: "text-eco-green-light" },
-  { label: "Employment Partners", value: "5,000+", icon: Briefcase, color: "text-eco-orange-light" },
   { label: "Team Members", value: "500", icon: UserCheck, color: "text-primary" },
   { label: "Full-Time Staff", value: "50", icon: UserCog, color: "text-eco-blue-light" },
+  { label: "Projected Revenue", value: "$500M+", icon: DollarSign, color: "text-primary" },
 ];
 
 export default function KpiGrid() {
