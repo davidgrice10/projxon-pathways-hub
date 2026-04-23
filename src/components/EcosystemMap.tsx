@@ -441,31 +441,45 @@ export default function EcosystemMap() {
             onClick={() => setSelected(null)}
           >
             <motion.div
-              className={`relative rounded-xl border-[1.5px] ${borderColors[selected.color]} ${modalGlow[selected.color]} bg-card p-6 overflow-y-auto`}
-              style={{ width: "min(720px, 90%)", maxHeight: "80%" }}
-              initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              transition={{ type: "spring", damping: 22 }}
+              className={`relative rounded-xl border-[1.5px] ${borderColors[selected.color]} ${modalGlow[selected.color]} bg-card p-6`}
+              style={{ width: "min(560px, 92%)", maxHeight: "90%" }}
+              initial={{ scale: 0.92, opacity: 0, y: 16 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.92, opacity: 0, y: 16 }}
+              transition={{ type: "spring", damping: 24, stiffness: 280 }}
               onClick={e => e.stopPropagation()}
             >
               <button onClick={() => setSelected(null)} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors">
-                <X size={20} />
+                <X size={18} />
               </button>
-              <h3 className="font-heading text-xl font-bold text-gradient-gold pr-8">{selected.label}</h3>
-              <p className="text-muted-foreground text-sm mb-4">{selected.subtitle}</p>
-              <ul className="space-y-2">
-                {selected.details.map((d, i) => (
-                  <motion.li
-                    key={i}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.06 }}
-                    className="flex items-start gap-2 text-sm text-foreground"
-                  >
-                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
-                    {d}
-                  </motion.li>
-                ))}
-              </ul>
+              <h3 className="font-heading text-xl font-bold text-gradient-gold pr-8 leading-tight">{selected.label}</h3>
+              <p className="text-muted-foreground text-xs uppercase tracking-widest-custom mt-1 mb-5 font-heading">{selected.subtitle}</p>
+
+              <div className="space-y-4">
+                <div>
+                  <p className="text-[10px] uppercase tracking-widest-custom text-primary font-heading mb-1">What it is</p>
+                  <p className="text-sm text-foreground leading-snug">{selected.sections.what}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-widest-custom text-primary font-heading mb-1">Why it matters</p>
+                  <p className="text-sm text-foreground leading-snug">{selected.sections.why}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-widest-custom text-primary font-heading mb-1.5">How it connects</p>
+                  <ul className="space-y-1.5">
+                    {selected.sections.connects.map((c, i) => (
+                      <motion.li
+                        key={i}
+                        initial={{ opacity: 0, x: -8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.1 + i * 0.05 }}
+                        className="flex items-start gap-2 text-sm text-foreground"
+                      >
+                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                        {c}
+                      </motion.li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             </motion.div>
           </motion.div>
         )}
