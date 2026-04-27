@@ -132,19 +132,27 @@ const connections: Connection[] = [
 ];
 
 const borderColors: Record<string, string> = {
-  gold: "border-primary",
-  blue: "border-eco-blue",
-  green: "border-eco-green",
-  orange: "border-eco-orange",
-  navy: "border-primary",
+  gold: "border-primary/90",
+  blue: "border-eco-blue/90",
+  green: "border-eco-green/90",
+  orange: "border-eco-orange/90",
+  navy: "border-primary/90",
 };
 
 const nodeGradients: Record<string, string> = {
-  gold: "linear-gradient(160deg, hsl(220, 18%, 13%), hsl(43, 30%, 9%))",
-  blue: "linear-gradient(160deg, hsl(220, 18%, 13%), hsl(210, 35%, 10%))",
-  green: "linear-gradient(160deg, hsl(220, 18%, 13%), hsl(145, 25%, 9%))",
-  orange: "linear-gradient(160deg, hsl(220, 18%, 13%), hsl(30, 30%, 10%))",
-  navy: "linear-gradient(160deg, hsl(220, 18%, 13%), hsl(220, 35%, 10%))",
+  gold: "linear-gradient(160deg, hsl(220, 20%, 14%) 0%, hsl(43, 28%, 10%) 100%)",
+  blue: "linear-gradient(160deg, hsl(220, 20%, 14%) 0%, hsl(210, 32%, 11%) 100%)",
+  green: "linear-gradient(160deg, hsl(220, 20%, 14%) 0%, hsl(145, 24%, 10%) 100%)",
+  orange: "linear-gradient(160deg, hsl(220, 20%, 14%) 0%, hsl(30, 28%, 11%) 100%)",
+  navy: "linear-gradient(160deg, hsl(220, 20%, 14%) 0%, hsl(220, 32%, 11%) 100%)",
+};
+
+const nodeGlow: Record<string, string> = {
+  gold: "0 0 18px -10px hsl(43, 72%, 55%, 0.35)",
+  blue: "0 0 18px -10px hsl(210, 60%, 55%, 0.35)",
+  green: "0 0 18px -10px hsl(145, 45%, 50%, 0.35)",
+  orange: "0 0 18px -10px hsl(30, 65%, 55%, 0.35)",
+  navy: "0 0 18px -10px hsl(43, 72%, 55%, 0.35)",
 };
 
 const modalGlow: Record<string, string> = {
