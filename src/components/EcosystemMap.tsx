@@ -269,6 +269,18 @@ export default function EcosystemMap() {
   const nodeRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [lines, setLines] = useState<OrthoLine[]>([]);
 
+  // Build related-node set for focused node (for highlight/fade)
+  const focusedId = selected?.id ?? null;
+  const relatedIds = (() => {
+    if (!focusedId) return null;
+    const set = new Set<string>([focusedId]);
+    for (const c of connections) {
+      if (c.from === focusedId) set.add(c.to);
+      if (c.to === focusedId) set.add(c.from);
+    }
+    return set;
+  })();
+
   // Close on Escape
   useEffect(() => {
     if (!selected) return;
