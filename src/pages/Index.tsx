@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import BrandHeader from "@/components/BrandHeader";
 import ValueBanner from "@/components/ValueBanner";
+import CountdownPanel from "@/components/CountdownPanel";
 import HeroPanel from "@/components/HeroPanel";
 import KpiGrid from "@/components/KpiGrid";
 import ImpactExplanation from "@/components/ImpactExplanation";
@@ -27,6 +28,9 @@ export default function Index() {
 
         {/* Value Banner */}
         <ValueBanner />
+
+        {/* Countdown */}
+        <CountdownPanel />
 
         {/* Hero */}
         <HeroPanel />

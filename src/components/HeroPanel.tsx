@@ -9,13 +9,6 @@ export default function HeroPanel() {
     "End-to-end talent development platform",
   ];
 
-  const [timeLeft, setTimeLeft] = useState(getTimeLeft());
-
-  useEffect(() => {
-    const id = setInterval(() => setTimeLeft(getTimeLeft()), 1000);
-    return () => clearInterval(id);
-  }, []);
-
   return (
     <section className="relative overflow-hidden rounded-2xl border border-border bg-card p-8 md:p-12 glow-gold">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
@@ -35,7 +28,7 @@ export default function HeroPanel() {
         <p className="text-muted-foreground text-lg max-w-2xl mb-8">
           PROJXON connects talent, education, and companies to create scalable career pathways.
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {outcomes.map((o, i) => (
             <motion.div
               key={i}
@@ -48,36 +41,6 @@ export default function HeroPanel() {
             </motion.div>
           ))}
         </div>
-
-        {/* 5-Year Target Countdown */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.6 }}
-          className="relative rounded-xl border border-primary/30 bg-gradient-to-br from-primary/10 via-background/40 to-transparent p-6 md:p-8 text-center overflow-hidden"
-        >
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,hsl(var(--primary)/0.15),transparent_70%)] pointer-events-none" />
-          <div className="relative">
-            <span className="text-muted-foreground tracking-widest-custom text-xs uppercase font-heading">
-              Our 5-Year Target
-            </span>
-            <h2 className="text-2xl md:text-4xl font-bold font-heading text-gradient-gold mt-2 mb-6">
-              Building the Future of Workforce Development
-            </h2>
-            <div className="flex justify-center items-end gap-3 md:gap-6 mb-6">
-              <CountdownUnit value={timeLeft.days} label="Days" />
-              <span className="text-2xl md:text-4xl font-bold text-primary/40 pb-6">:</span>
-              <CountdownUnit value={timeLeft.hours} label="Hours" />
-              <span className="text-2xl md:text-4xl font-bold text-primary/40 pb-6">:</span>
-              <CountdownUnit value={timeLeft.minutes} label="Minutes" />
-              <span className="text-2xl md:text-4xl font-bold text-primary/40 pb-6">:</span>
-              <CountdownUnit value={timeLeft.seconds} label="Seconds" />
-            </div>
-            <p className="text-muted-foreground text-sm md:text-base max-w-2xl mx-auto">
-              We are working toward a fully realized ecosystem connecting talent, education, and employment at global scale.
-            </p>
-          </div>
-        </motion.div>
       </motion.div>
     </section>
   );
