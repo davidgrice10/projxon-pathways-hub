@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Network } from "lucide-react";
+import EyebrowLabel from "./EyebrowLabel";
 
 interface Props {
   eyebrow?: string;
@@ -14,21 +15,14 @@ export default function SectionLabel({ eyebrow, title, description }: Props) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.5 }}
-      className="text-center max-w-2xl mx-auto"
+      className="text-center max-w-2xl mx-auto flex flex-col items-center gap-3"
     >
-      {eyebrow && (
-        <div className="inline-flex items-center gap-2 mb-3 px-3 py-1 rounded-full border border-primary/30 bg-primary/10">
-          <Network className="text-primary" size={14} />
-          <span className="text-[10px] uppercase tracking-widest-custom font-heading text-primary">
-            {eyebrow}
-          </span>
-        </div>
-      )}
+      {eyebrow && <EyebrowLabel icon={Network}>{eyebrow}</EyebrowLabel>}
       <h2 className="text-2xl md:text-3xl font-bold font-heading text-foreground leading-tight">
         {title}
       </h2>
       {description && (
-        <p className="text-muted-foreground text-sm md:text-base mt-2 leading-relaxed">
+        <p className="text-sm text-muted-foreground leading-relaxed max-w-prose mx-auto">
           {description}
         </p>
       )}

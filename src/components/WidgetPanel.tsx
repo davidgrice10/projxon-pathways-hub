@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, ChevronUp, type LucideIcon } from "lucide-react";
+import { ChevronDown, type LucideIcon } from "lucide-react";
 
 interface WidgetPanelProps {
   title: string;
@@ -11,21 +11,18 @@ interface WidgetPanelProps {
   description?: string;
 }
 
-const borderColorMap = {
-  gold: "border-primary/30 hover:border-primary/60",
-  blue: "border-eco-blue/30 hover:border-eco-blue/60",
-  green: "border-eco-green/30 hover:border-eco-green/60",
-  orange: "border-eco-orange/30 hover:border-eco-orange/60",
+const iconColorMap = {
+  gold: "bg-amber-400/10 text-amber-400",
+  blue: "bg-blue-400/10 text-blue-400",
+  green: "bg-emerald-400/10 text-emerald-400",
+  orange: "bg-orange-400/10 text-orange-400",
 };
 
-const dotColorMap = {
-  gold: "bg-primary",
-  blue: "bg-eco-blue",
-  green: "bg-eco-green",
-  orange: "bg-eco-orange",
+const cardStyle: React.CSSProperties = {
+  boxShadow: "inset 0 1px 0 0 rgba(255,210,80,0.07)",
 };
 
-export default function WidgetPanel({ title, subtitle, icon: Icon, items, color = "gold", description }: WidgetPanelProps) {
+export default function WidgetPanel({ title, subtitle, icon: Icon, items, color = "gold" }: WidgetPanelProps) {
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -35,34 +32,45 @@ export default function WidgetPanel({ title, subtitle, icon: Icon, items, color 
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-30px" }}
       transition={{ duration: 0.4 }}
-      whileHover={{ y: -2, transition: { duration: 0.2 } }}
-      className={`rounded-xl border bg-card p-5 transition-colors cursor-pointer ${borderColorMap[color]}`}
+      whileHover={{ scale: 1.015, transition: { duration: 0.2 } }}
+      style={cardStyle}
+      className="rounded-2xl border border-amber-400/15 bg-card hover:border-amber-400/35 transition-all duration-300 ease-out cursor-pointer py-4 px-5"
       onClick={() => setExpanded(!expanded)}
     >
-      <div className="flex items-start justify-between">
-        <div className="flex items-center gap-3">
-          <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${dotColorMap[color]}/20`}>
-            <Icon size={18} className={color === "gold" ? "text-primary" : color === "blue" ? "text-eco-blue-light" : color === "green" ? "text-eco-green-light" : "text-eco-orange-light"} />
-          </div>
-          <div>
-            <h3 className="font-heading font-semibold text-sm text-foreground">{title}</h3>
-          </div>
+      <div className="flex items-center gap-3">
+        <div className={`shrink-0 rounded-lg p-2 w-9 h-9 flex items-center justify-center ${iconColorMap[color]}`}>
+          <Icon className="w-4 h-4" />
         </div>
-        {expanded ? <ChevronUp size={16} className="text-muted-foreground mt-1" /> : <ChevronDown size={16} className="text-muted-foreground mt-1" />}
+        <div className="flex items-center gap-2 min-w-0 flex-1">
+          <h3 className="font-semibold text-sm text-foreground truncate">{title}</h3>
+          {subtitle && (
+            <span className="shrink-0 text-[10px] tracking-widest text-amber-400 border border-amber-400/30 px-2 py-0.5 rounded-full">
+              {subtitle}
+            </span>
+          )}
+        </div>
+        <motion.div
+          animate={{ rotate: expanded ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+          className="ml-auto opacity-60"
+        >
+          <ChevronDown size={16} className="text-muted-foreground" />
+        </motion.div>
       </div>
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
         {expanded && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            {subtitle && <p className="text-xs text-muted-foreground italic mt-2 mb-1">{subtitle}</p>}
             <ul className="mt-3 space-y-2">
               {items.slice(0, 3).map((item, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-foreground leading-snug">
-                  <span className={`mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 ${dotColorMap[color]}`} />
-                  {item}
+                <li key={i} className="flex items-start text-xs text-muted-foreground leading-snug">
+                  <span className="text-amber-400 mr-2 select-none">•</span>
+                  <span>{item}</span>
                 </li>
               ))}
             </ul>
