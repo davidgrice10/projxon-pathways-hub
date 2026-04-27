@@ -3,7 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 
 const items = [
   "Companies scale from small teams into full operations",
-  "Students move directly into career opportunities",
+  "Students transition directly into career opportunities",
   "Internships become structured hiring pipelines",
 ];
 
@@ -15,7 +15,7 @@ export default function ImpactSummary() {
           Ecosystem Impact
         </p>
         <h2 className="text-2xl md:text-3xl font-bold font-heading text-gradient-gold">
-          What This System Produces
+          What This Means
         </h2>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
