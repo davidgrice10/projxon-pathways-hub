@@ -9,6 +9,8 @@ import EcosystemMap from "@/components/EcosystemMap";
 import ProgramStack from "@/components/ProgramStack";
 import WidgetPanel from "@/components/WidgetPanel";
 import ImpactSummary from "@/components/ImpactSummary";
+import SectionLabel from "@/components/SectionLabel";
+import SectionBridge from "@/components/SectionBridge";
 import {
   Zap, Star, Award, Globe, TrendingUp, Handshake,
   DollarSign, Palette, Megaphone, Target
@@ -35,16 +37,26 @@ export default function Index() {
         {/* Hero */}
         <HeroPanel />
 
-        {/* KPIs */}
-        <motion.div variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}>
-          <KpiGrid />
-          <ImpactExplanation />
-        </motion.div>
+        {/* Ecosystem Section Label */}
+        <SectionLabel
+          eyebrow="Ecosystem"
+          title="How the PROJXON Ecosystem Works"
+          description="A connected system that develops talent and delivers workforce-ready teams to employers."
+        />
 
         {/* Ecosystem Map */}
         <section className="rounded-2xl border border-border bg-card p-6 md:p-10">
           <EcosystemMap />
         </section>
+
+        {/* Bridge to KPIs */}
+        <SectionBridge text="This ecosystem drives measurable outcomes across people, partnerships, and organizations." />
+
+        {/* KPIs */}
+        <motion.div variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}>
+          <KpiGrid />
+          <ImpactExplanation />
+        </motion.div>
 
         {/* Program Stack */}
         <motion.section
