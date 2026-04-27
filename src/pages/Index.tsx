@@ -7,6 +7,7 @@ import ImpactExplanation from "@/components/ImpactExplanation";
 import EcosystemMap from "@/components/EcosystemMap";
 import ProgramStack from "@/components/ProgramStack";
 import WidgetPanel from "@/components/WidgetPanel";
+import ImpactSummary from "@/components/ImpactSummary";
 import {
   Zap, Star, Award, Globe, TrendingUp, Handshake,
   DollarSign, Palette, Megaphone, Target
@@ -74,6 +75,9 @@ export default function Index() {
             </motion.div>
           ))}
         </div>
+
+        {/* Impact Summary */}
+        <ImpactSummary />
 
         {/* Footer */}
         <motion.footer
