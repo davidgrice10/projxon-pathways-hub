@@ -363,31 +363,38 @@ export default function EcosystemMap() {
           {lines.map((line, i) => {
             const colors = tintColors[line.tint] || tintColors.gold;
             const isHovered = hoveredConn === i;
+            const isConnRelated = relatedIds
+              ? (relatedIds.has(line.fromId) && relatedIds.has(line.toId) &&
+                 (line.fromId === focusedId || line.toId === focusedId))
+              : false;
+            const isDimmed = relatedIds !== null && !isConnRelated;
+            const highlight = isHovered || isConnRelated;
 
             return (
               <g key={i}>
                 <motion.path
                   d={line.path}
                   fill="none"
-                  stroke={isHovered ? colors.glow : colors.base}
-                  strokeWidth={isHovered ? 2.2 : 1.6}
-                  strokeOpacity={isHovered ? 1 : (line.dashed ? 0.45 : 0.7)}
+                  stroke={highlight ? colors.glow : colors.base}
+                  strokeWidth={highlight ? 2.2 : 1.6}
+                  strokeOpacity={isDimmed ? 0.12 : highlight ? 1 : (line.dashed ? 0.45 : 0.7)}
                   strokeDasharray={line.dashed ? "4 4" : undefined}
                   strokeLinecap="square"
                   strokeLinejoin="miter"
-                  filter={isHovered ? `url(#conn-glow-${line.tint})` : undefined}
+                  filter={highlight ? `url(#conn-glow-${line.tint})` : undefined}
                   initial={{ pathLength: 0, opacity: 0 }}
                   animate={{ pathLength: 1, opacity: 1 }}
                   transition={{ delay: 0.5 + i * 0.04, duration: 0.6, ease: "easeOut" as const }}
+                  style={{ transition: "stroke-opacity 0.3s, stroke-width 0.3s" }}
                 />
                 {/* Endpoint dot at target node edge */}
                 {!line.dashed && (
                   <motion.circle
                     cx={line.endPoint.x}
                     cy={line.endPoint.y}
-                    r={isHovered ? 3 : 2}
-                    fill={isHovered ? colors.glow : colors.base}
-                    fillOpacity={isHovered ? 1 : 0.85}
+                    r={highlight ? 3 : 2}
+                    fill={highlight ? colors.glow : colors.base}
+                    fillOpacity={isDimmed ? 0.15 : highlight ? 1 : 0.85}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.9 + i * 0.04 }}
