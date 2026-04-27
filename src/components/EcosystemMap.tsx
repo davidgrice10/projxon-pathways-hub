@@ -132,19 +132,27 @@ const connections: Connection[] = [
 ];
 
 const borderColors: Record<string, string> = {
-  gold: "border-primary",
-  blue: "border-eco-blue",
-  green: "border-eco-green",
-  orange: "border-eco-orange",
-  navy: "border-primary",
+  gold: "border-primary/90",
+  blue: "border-eco-blue/90",
+  green: "border-eco-green/90",
+  orange: "border-eco-orange/90",
+  navy: "border-primary/90",
 };
 
 const nodeGradients: Record<string, string> = {
-  gold: "linear-gradient(160deg, hsl(220, 18%, 13%), hsl(43, 30%, 9%))",
-  blue: "linear-gradient(160deg, hsl(220, 18%, 13%), hsl(210, 35%, 10%))",
-  green: "linear-gradient(160deg, hsl(220, 18%, 13%), hsl(145, 25%, 9%))",
-  orange: "linear-gradient(160deg, hsl(220, 18%, 13%), hsl(30, 30%, 10%))",
-  navy: "linear-gradient(160deg, hsl(220, 18%, 13%), hsl(220, 35%, 10%))",
+  gold: "linear-gradient(160deg, hsl(220, 20%, 14%) 0%, hsl(43, 28%, 10%) 100%)",
+  blue: "linear-gradient(160deg, hsl(220, 20%, 14%) 0%, hsl(210, 32%, 11%) 100%)",
+  green: "linear-gradient(160deg, hsl(220, 20%, 14%) 0%, hsl(145, 24%, 10%) 100%)",
+  orange: "linear-gradient(160deg, hsl(220, 20%, 14%) 0%, hsl(30, 28%, 11%) 100%)",
+  navy: "linear-gradient(160deg, hsl(220, 20%, 14%) 0%, hsl(220, 32%, 11%) 100%)",
+};
+
+const nodeGlow: Record<string, string> = {
+  gold: "0 0 18px -10px hsl(43, 72%, 55%, 0.35)",
+  blue: "0 0 18px -10px hsl(210, 60%, 55%, 0.35)",
+  green: "0 0 18px -10px hsl(145, 45%, 50%, 0.35)",
+  orange: "0 0 18px -10px hsl(30, 65%, 55%, 0.35)",
+  navy: "0 0 18px -10px hsl(43, 72%, 55%, 0.35)",
 };
 
 const modalGlow: Record<string, string> = {
@@ -261,6 +269,18 @@ export default function EcosystemMap() {
   const nodeRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [lines, setLines] = useState<OrthoLine[]>([]);
 
+  // Build related-node set for focused node (for highlight/fade)
+  const focusedId = selected?.id ?? null;
+  const relatedIds = (() => {
+    if (!focusedId) return null;
+    const set = new Set<string>([focusedId]);
+    for (const c of connections) {
+      if (c.from === focusedId) set.add(c.to);
+      if (c.to === focusedId) set.add(c.from);
+    }
+    return set;
+  })();
+
   // Close on Escape
   useEffect(() => {
     if (!selected) return;
@@ -343,31 +363,38 @@ export default function EcosystemMap() {
           {lines.map((line, i) => {
             const colors = tintColors[line.tint] || tintColors.gold;
             const isHovered = hoveredConn === i;
+            const isConnRelated = relatedIds
+              ? (relatedIds.has(line.fromId) && relatedIds.has(line.toId) &&
+                 (line.fromId === focusedId || line.toId === focusedId))
+              : false;
+            const isDimmed = relatedIds !== null && !isConnRelated;
+            const highlight = isHovered || isConnRelated;
 
             return (
               <g key={i}>
                 <motion.path
                   d={line.path}
                   fill="none"
-                  stroke={isHovered ? colors.glow : colors.base}
-                  strokeWidth={isHovered ? 2.2 : 1.6}
-                  strokeOpacity={isHovered ? 1 : (line.dashed ? 0.45 : 0.7)}
+                  stroke={highlight ? colors.glow : colors.base}
+                  strokeWidth={highlight ? 2.2 : 1.6}
+                  strokeOpacity={isDimmed ? 0.12 : highlight ? 1 : (line.dashed ? 0.45 : 0.7)}
                   strokeDasharray={line.dashed ? "4 4" : undefined}
                   strokeLinecap="square"
                   strokeLinejoin="miter"
-                  filter={isHovered ? `url(#conn-glow-${line.tint})` : undefined}
+                  filter={highlight ? `url(#conn-glow-${line.tint})` : undefined}
                   initial={{ pathLength: 0, opacity: 0 }}
                   animate={{ pathLength: 1, opacity: 1 }}
                   transition={{ delay: 0.5 + i * 0.04, duration: 0.6, ease: "easeOut" as const }}
+                  style={{ transition: "stroke-opacity 0.3s, stroke-width 0.3s" }}
                 />
                 {/* Endpoint dot at target node edge */}
                 {!line.dashed && (
                   <motion.circle
                     cx={line.endPoint.x}
                     cy={line.endPoint.y}
-                    r={isHovered ? 3 : 2}
-                    fill={isHovered ? colors.glow : colors.base}
-                    fillOpacity={isHovered ? 1 : 0.85}
+                    r={highlight ? 3 : 2}
+                    fill={highlight ? colors.glow : colors.base}
+                    fillOpacity={isDimmed ? 0.15 : highlight ? 1 : 0.85}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.9 + i * 0.04 }}
@@ -393,40 +420,50 @@ export default function EcosystemMap() {
           {/* B2C Column */}
           <div className="flex flex-col justify-between py-2">
             {b2cNodes.map((node, i) => (
-              <NodeBox key={node.id} node={node} onClick={() => setSelected(node)} delay={0.15 + i * 0.08} ref={setNodeRef(node.id)} />
+              <NodeBox key={node.id} node={node} onClick={() => setSelected(node)} delay={0.15 + i * 0.08} ref={setNodeRef(node.id)} dimmed={!!relatedIds && !relatedIds.has(node.id)} highlighted={focusedId === node.id} />
             ))}
           </div>
 
           {/* Center Column: PROJXON → MOMENTUM → MOP */}
           <div className="flex flex-col items-center justify-between py-2">
-            <NodeBox node={projxonNode} onClick={() => setSelected(projxonNode)} delay={0.1} ref={setNodeRef("projxon")} />
+            <NodeBox node={projxonNode} onClick={() => setSelected(projxonNode)} delay={0.1} ref={setNodeRef("projxon")} dimmed={!!relatedIds && !relatedIds.has("projxon")} highlighted={focusedId === "projxon"} />
 
-            <motion.button
-              ref={setNodeRef("momentum")}
-              onClick={() => setSelected(momentumNode)}
-              className="w-full border-[1.5px] border-primary rounded-xl py-12 px-7 text-center cursor-pointer transition-all hover:brightness-110"
-              style={{
-                background: "linear-gradient(160deg, hsl(220, 45%, 18%), hsl(220, 35%, 10%))",
-                boxShadow: "0 0 0 1px hsl(43, 72%, 55%, 0.15), 0 8px 32px -12px hsl(43, 72%, 55%, 0.4), inset 0 1px 0 hsl(43, 72%, 55%, 0.1)",
-              }}
-              initial={{ opacity: 0, scale: 0.92 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3, type: "spring", stiffness: 160, damping: 20 }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <p className="font-heading font-bold text-2xl text-gradient-gold leading-tight tracking-tight">MOMENTUM</p>
-              <p className="text-foreground/70 text-xs mt-1.5 font-medium">Performance System</p>
-              <p className="text-muted-foreground text-[10px] mt-2 opacity-70">Learning · Community · Implementation</p>
-            </motion.button>
+            {(() => {
+              const momDimmed = !!relatedIds && !relatedIds.has("momentum");
+              const momHighlighted = focusedId === "momentum";
+              return (
+                <motion.button
+                  ref={setNodeRef("momentum")}
+                  onClick={() => setSelected(momentumNode)}
+                  className="w-full border-[1.5px] border-primary/90 rounded-xl py-12 px-7 text-center cursor-pointer"
+                  style={{
+                    background: "linear-gradient(160deg, hsl(220, 45%, 18%), hsl(220, 35%, 10%))",
+                    boxShadow: momHighlighted
+                      ? "0 0 0 1px hsl(43, 72%, 55%, 0.4), 0 12px 40px -12px hsl(43, 72%, 55%, 0.7), inset 0 1px 0 hsl(43, 72%, 55%, 0.15)"
+                      : "0 0 0 1px hsl(43, 72%, 55%, 0.15), 0 8px 32px -12px hsl(43, 72%, 55%, 0.4), inset 0 1px 0 hsl(43, 72%, 55%, 0.1)",
+                    opacity: momDimmed ? 0.28 : 1,
+                    transition: "opacity 0.3s, box-shadow 0.3s",
+                  }}
+                  initial={{ opacity: 0, scale: 0.92 }}
+                  animate={{ opacity: momDimmed ? 0.28 : 1, scale: 1 }}
+                  transition={{ delay: 0.3, type: "spring", stiffness: 160, damping: 20 }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <p className="font-heading font-bold text-2xl text-gradient-gold leading-tight tracking-tight">MOMENTUM</p>
+                  <p className="text-foreground/70 text-xs mt-1.5 font-medium">Performance System</p>
+                  <p className="text-muted-foreground text-[10px] mt-2 opacity-70">Learning · Community · Implementation</p>
+                </motion.button>
+              );
+            })()}
 
-            <NodeBox node={mopNode} onClick={() => setSelected(mopNode)} delay={0.7} ref={setNodeRef("mop")} />
+            <NodeBox node={mopNode} onClick={() => setSelected(mopNode)} delay={0.7} ref={setNodeRef("mop")} dimmed={!!relatedIds && !relatedIds.has("mop")} highlighted={focusedId === "mop"} />
           </div>
 
           {/* B2B Column */}
           <div className="flex flex-col justify-between py-2">
             {b2bNodes.map((node, i) => (
-              <NodeBox key={node.id} node={node} onClick={() => setSelected(node)} delay={0.15 + i * 0.08} ref={setNodeRef(node.id)} />
+              <NodeBox key={node.id} node={node} onClick={() => setSelected(node)} delay={0.15 + i * 0.08} ref={setNodeRef(node.id)} dimmed={!!relatedIds && !relatedIds.has(node.id)} highlighted={focusedId === node.id} />
             ))}
           </div>
         </div>
@@ -488,21 +525,25 @@ export default function EcosystemMap() {
   );
 }
 
-const NodeBox = forwardRef<HTMLButtonElement, { node: EcoNode; onClick: () => void; delay?: number }>(
-  ({ node, onClick, delay = 0 }, ref) => {
+const NodeBox = forwardRef<HTMLButtonElement, { node: EcoNode; onClick: () => void; delay?: number; dimmed?: boolean; highlighted?: boolean }>(
+  ({ node, onClick, delay = 0, dimmed = false, highlighted = false }, ref) => {
     return (
       <motion.button
         ref={ref}
         onClick={onClick}
-        className={`w-full border-[1.5px] ${borderColors[node.color]} transition-all hover:brightness-110 ${node.dashed ? "border-dashed" : ""} rounded-xl py-5 px-5 text-center cursor-pointer`}
+        className={`w-full border-[1.5px] ${borderColors[node.color]} hover:brightness-110 ${node.dashed ? "border-dashed" : ""} rounded-xl py-6 px-5 text-center cursor-pointer`}
         style={{
           background: nodeGradients[node.color],
-          boxShadow: "0 1px 0 hsl(0, 0%, 100%, 0.04) inset, 0 4px 16px -8px hsl(220, 30%, 0%, 0.5)",
+          boxShadow: highlighted
+            ? `0 1px 0 hsl(0, 0%, 100%, 0.06) inset, ${nodeGlow[node.color]}, 0 0 32px -10px currentColor`
+            : `0 1px 0 hsl(0, 0%, 100%, 0.04) inset, ${nodeGlow[node.color]}`,
+          opacity: dimmed ? 0.28 : 1,
+          transition: "opacity 0.3s ease, box-shadow 0.3s ease",
         }}
         initial={{ opacity: 0, scale: 0.92, y: 8 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
+        animate={{ opacity: dimmed ? 0.28 : 1, scale: highlighted ? 1.03 : 1, y: 0 }}
         transition={{ delay, type: "spring", stiffness: 180, damping: 20 }}
-        whileHover={{ scale: 1.02, y: -1 }}
+        whileHover={{ scale: highlighted ? 1.04 : 1.02, y: -1 }}
         whileTap={{ scale: 0.98 }}
       >
         <p className={`font-heading font-bold text-sm leading-tight tracking-tight ${node.color === "gold" ? "text-gradient-gold" : "text-foreground"}`}>{node.label}</p>
