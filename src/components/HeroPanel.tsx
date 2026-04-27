@@ -1,36 +1,5 @@
 import { motion } from "framer-motion";
 import { Rocket } from "lucide-react";
-import { useEffect, useState } from "react";
-
-const TARGET_DATE = new Date("2031-01-01T00:00:00").getTime();
-
-function getTimeLeft() {
-  const diff = Math.max(0, TARGET_DATE - Date.now());
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-  const minutes = Math.floor((diff / (1000 * 60)) % 60);
-  const seconds = Math.floor((diff / 1000) % 60);
-  return { days, hours, minutes, seconds };
-}
-
-function CountdownUnit({ value, label }: { value: number; label: string }) {
-  return (
-    <div className="flex flex-col items-center min-w-[72px] md:min-w-[96px]">
-      <motion.div
-        key={value}
-        initial={{ y: -8, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.3 }}
-        className="text-3xl md:text-5xl font-bold font-heading text-gradient-gold tabular-nums"
-      >
-        {String(value).padStart(2, "0")}
-      </motion.div>
-      <span className="text-[10px] md:text-xs uppercase tracking-widest-custom text-muted-foreground mt-1 font-heading">
-        {label}
-      </span>
-    </div>
-  );
-}
 
 export default function HeroPanel() {
   const outcomes = [
