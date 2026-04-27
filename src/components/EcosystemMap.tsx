@@ -468,7 +468,6 @@ export default function EcosystemMap() {
           </div>
         </div>
       </div>
-      </div>
 
       {/* Detail Modal — scoped to panel */}
       <AnimatePresence>
@@ -526,21 +525,25 @@ export default function EcosystemMap() {
   );
 }
 
-const NodeBox = forwardRef<HTMLButtonElement, { node: EcoNode; onClick: () => void; delay?: number }>(
-  ({ node, onClick, delay = 0 }, ref) => {
+const NodeBox = forwardRef<HTMLButtonElement, { node: EcoNode; onClick: () => void; delay?: number; dimmed?: boolean; highlighted?: boolean }>(
+  ({ node, onClick, delay = 0, dimmed = false, highlighted = false }, ref) => {
     return (
       <motion.button
         ref={ref}
         onClick={onClick}
-        className={`w-full border-[1.5px] ${borderColors[node.color]} transition-all hover:brightness-110 ${node.dashed ? "border-dashed" : ""} rounded-xl py-5 px-5 text-center cursor-pointer`}
+        className={`w-full border-[1.5px] ${borderColors[node.color]} hover:brightness-110 ${node.dashed ? "border-dashed" : ""} rounded-xl py-6 px-5 text-center cursor-pointer`}
         style={{
           background: nodeGradients[node.color],
-          boxShadow: "0 1px 0 hsl(0, 0%, 100%, 0.04) inset, 0 4px 16px -8px hsl(220, 30%, 0%, 0.5)",
+          boxShadow: highlighted
+            ? `0 1px 0 hsl(0, 0%, 100%, 0.06) inset, ${nodeGlow[node.color]}, 0 0 32px -10px currentColor`
+            : `0 1px 0 hsl(0, 0%, 100%, 0.04) inset, ${nodeGlow[node.color]}`,
+          opacity: dimmed ? 0.28 : 1,
+          transition: "opacity 0.3s ease, box-shadow 0.3s ease",
         }}
         initial={{ opacity: 0, scale: 0.92, y: 8 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
+        animate={{ opacity: dimmed ? 0.28 : 1, scale: highlighted ? 1.03 : 1, y: 0 }}
         transition={{ delay, type: "spring", stiffness: 180, damping: 20 }}
-        whileHover={{ scale: 1.02, y: -1 }}
+        whileHover={{ scale: highlighted ? 1.04 : 1.02, y: -1 }}
         whileTap={{ scale: 0.98 }}
       >
         <p className={`font-heading font-bold text-sm leading-tight tracking-tight ${node.color === "gold" ? "text-gradient-gold" : "text-foreground"}`}>{node.label}</p>
