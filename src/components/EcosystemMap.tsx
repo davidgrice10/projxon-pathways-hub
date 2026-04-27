@@ -325,9 +325,11 @@ export default function EcosystemMap() {
 
   return (
     <div ref={panelRef} className="relative w-full overflow-hidden">
-      <div className="text-center mb-4">
-        <p className="text-muted-foreground tracking-widest-custom text-sm uppercase mb-2 font-heading">Ecosystem Map</p>
-        <h2 className="text-4xl font-bold font-heading text-gradient-gold">PROJXON</h2>
+      <div className="text-center mb-4 flex flex-col items-center gap-3">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-amber-400/20 bg-amber-400/5 text-[10px] font-bold tracking-[0.2em] uppercase text-amber-400/75">
+          Ecosystem Map
+        </span>
+        <h2 className="text-2xl md:text-3xl font-bold font-heading text-foreground leading-tight">PROJXON</h2>
       </div>
 
       {/* Zone labels */}

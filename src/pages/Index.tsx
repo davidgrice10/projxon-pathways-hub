@@ -45,7 +45,10 @@ export default function Index() {
         />
 
         {/* Ecosystem Map */}
-        <section className="rounded-2xl border border-border bg-card p-6 md:p-10">
+        <section
+          style={{ boxShadow: "inset 0 1px 0 0 rgba(255,210,80,0.07)" }}
+          className="rounded-2xl border border-amber-400/15 hover:border-amber-400/35 bg-card p-6 md:p-10 transition-all duration-300 ease-out"
+        >
           <EcosystemMap />
         </section>
 
@@ -60,14 +63,15 @@ export default function Index() {
 
         {/* Program Stack */}
         <motion.section
-          className="rounded-2xl border border-border bg-card p-6 md:p-8"
+          style={{ boxShadow: "inset 0 1px 0 0 rgba(255,210,80,0.07)" }}
+          className="rounded-2xl border border-amber-400/15 hover:border-amber-400/35 bg-card p-6 md:p-8 transition-all duration-300 ease-out"
           variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}
         >
           <ProgramStack />
         </motion.section>
 
         {/* Widget Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {[
             { title: "What PROJXON Delivers", icon: Zap, color: "gold" as const, items: ["Workforce development programs", "Internship and career pipeline creation", "Professional training and upskilling", "University-to-employer connection systems", "Large-scale events and workshops", "Digital learning and content platforms"] },
             { title: "Next-Generation Internship Platform", subtitle: "MIP", icon: Star, color: "blue" as const, items: ["Standardized internship frameworks", "Company ratings and assessments (1–5 stars)", "Transparent evaluation of opportunities", "Improved matching between talent and employers"], description: "A new benchmark for internship quality and career readiness." },

@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import logo from "@/assets/projxon-logo.png";
 
 export default function BrandHeader() {
   return (
@@ -7,14 +6,11 @@ export default function BrandHeader() {
       initial={{ opacity: 0, y: -12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="flex justify-center pt-2 pb-4"
+      className="flex justify-center items-center py-5 border-b border-amber-400/10"
     >
-      <img
-        src={logo}
-        alt="PROJXON"
-        className="h-10 md:h-12 w-auto select-none"
-        draggable={false}
-      />
+      <span className="font-heading font-bold text-xl md:text-2xl text-amber-400 tracking-widest select-none">
+        PROJXON
+      </span>
     </motion.header>
   );
 }
