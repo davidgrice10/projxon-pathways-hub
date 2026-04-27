@@ -420,43 +420,54 @@ export default function EcosystemMap() {
           {/* B2C Column */}
           <div className="flex flex-col justify-between py-2">
             {b2cNodes.map((node, i) => (
-              <NodeBox key={node.id} node={node} onClick={() => setSelected(node)} delay={0.15 + i * 0.08} ref={setNodeRef(node.id)} />
+              <NodeBox key={node.id} node={node} onClick={() => setSelected(node)} delay={0.15 + i * 0.08} ref={setNodeRef(node.id)} dimmed={!!relatedIds && !relatedIds.has(node.id)} highlighted={focusedId === node.id} />
             ))}
           </div>
 
           {/* Center Column: PROJXON → MOMENTUM → MOP */}
           <div className="flex flex-col items-center justify-between py-2">
-            <NodeBox node={projxonNode} onClick={() => setSelected(projxonNode)} delay={0.1} ref={setNodeRef("projxon")} />
+            <NodeBox node={projxonNode} onClick={() => setSelected(projxonNode)} delay={0.1} ref={setNodeRef("projxon")} dimmed={!!relatedIds && !relatedIds.has("projxon")} highlighted={focusedId === "projxon"} />
 
-            <motion.button
-              ref={setNodeRef("momentum")}
-              onClick={() => setSelected(momentumNode)}
-              className="w-full border-[1.5px] border-primary rounded-xl py-12 px-7 text-center cursor-pointer transition-all hover:brightness-110"
-              style={{
-                background: "linear-gradient(160deg, hsl(220, 45%, 18%), hsl(220, 35%, 10%))",
-                boxShadow: "0 0 0 1px hsl(43, 72%, 55%, 0.15), 0 8px 32px -12px hsl(43, 72%, 55%, 0.4), inset 0 1px 0 hsl(43, 72%, 55%, 0.1)",
-              }}
-              initial={{ opacity: 0, scale: 0.92 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3, type: "spring", stiffness: 160, damping: 20 }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <p className="font-heading font-bold text-2xl text-gradient-gold leading-tight tracking-tight">MOMENTUM</p>
-              <p className="text-foreground/70 text-xs mt-1.5 font-medium">Performance System</p>
-              <p className="text-muted-foreground text-[10px] mt-2 opacity-70">Learning · Community · Implementation</p>
-            </motion.button>
+            {(() => {
+              const momDimmed = !!relatedIds && !relatedIds.has("momentum");
+              const momHighlighted = focusedId === "momentum";
+              return (
+                <motion.button
+                  ref={setNodeRef("momentum")}
+                  onClick={() => setSelected(momentumNode)}
+                  className="w-full border-[1.5px] border-primary/90 rounded-xl py-12 px-7 text-center cursor-pointer"
+                  style={{
+                    background: "linear-gradient(160deg, hsl(220, 45%, 18%), hsl(220, 35%, 10%))",
+                    boxShadow: momHighlighted
+                      ? "0 0 0 1px hsl(43, 72%, 55%, 0.4), 0 12px 40px -12px hsl(43, 72%, 55%, 0.7), inset 0 1px 0 hsl(43, 72%, 55%, 0.15)"
+                      : "0 0 0 1px hsl(43, 72%, 55%, 0.15), 0 8px 32px -12px hsl(43, 72%, 55%, 0.4), inset 0 1px 0 hsl(43, 72%, 55%, 0.1)",
+                    opacity: momDimmed ? 0.28 : 1,
+                    transition: "opacity 0.3s, box-shadow 0.3s",
+                  }}
+                  initial={{ opacity: 0, scale: 0.92 }}
+                  animate={{ opacity: momDimmed ? 0.28 : 1, scale: 1 }}
+                  transition={{ delay: 0.3, type: "spring", stiffness: 160, damping: 20 }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <p className="font-heading font-bold text-2xl text-gradient-gold leading-tight tracking-tight">MOMENTUM</p>
+                  <p className="text-foreground/70 text-xs mt-1.5 font-medium">Performance System</p>
+                  <p className="text-muted-foreground text-[10px] mt-2 opacity-70">Learning · Community · Implementation</p>
+                </motion.button>
+              );
+            })()}
 
-            <NodeBox node={mopNode} onClick={() => setSelected(mopNode)} delay={0.7} ref={setNodeRef("mop")} />
+            <NodeBox node={mopNode} onClick={() => setSelected(mopNode)} delay={0.7} ref={setNodeRef("mop")} dimmed={!!relatedIds && !relatedIds.has("mop")} highlighted={focusedId === "mop"} />
           </div>
 
           {/* B2B Column */}
           <div className="flex flex-col justify-between py-2">
             {b2bNodes.map((node, i) => (
-              <NodeBox key={node.id} node={node} onClick={() => setSelected(node)} delay={0.15 + i * 0.08} ref={setNodeRef(node.id)} />
+              <NodeBox key={node.id} node={node} onClick={() => setSelected(node)} delay={0.15 + i * 0.08} ref={setNodeRef(node.id)} dimmed={!!relatedIds && !relatedIds.has(node.id)} highlighted={focusedId === node.id} />
             ))}
           </div>
         </div>
+      </div>
       </div>
 
       {/* Detail Modal — scoped to panel */}
