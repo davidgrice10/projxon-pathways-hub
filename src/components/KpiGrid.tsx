@@ -7,7 +7,7 @@ const metrics = [
   { label: "University Partners", value: "500+", icon: GraduationCap, color: "text-eco-green-light" },
   { label: "Team Members", value: "500", icon: UserCheck, color: "text-primary" },
   { label: "Full-Time Staff", value: "50", icon: UserCog, color: "text-eco-blue-light" },
-  { label: "Revenue (Scale Indicator)", value: "$500M+", icon: DollarSign, color: "text-primary" },
+  { label: "Projected Revenue", value: "$500M+", icon: DollarSign, color: "text-primary" },
 ];
 
 export default function KpiGrid() {
