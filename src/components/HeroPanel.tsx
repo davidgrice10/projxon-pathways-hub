@@ -15,7 +15,11 @@ export default function HeroPanel() {
   ];
 
   return (
-    <section
+    <motion.section
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      whileHover={{ scale: 1.005 }}
       style={cardStyle}
       className="relative overflow-hidden rounded-2xl border border-amber-400/15 hover:border-amber-400/35 bg-card p-8 md:p-10 transition-all duration-300 ease-out"
     >
@@ -39,8 +43,8 @@ export default function HeroPanel() {
           {outcomes.map((o, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 + i * 0.1 }}
+              initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 + i * 0.15, duration: 0.5 }}
               className="flex items-start gap-2 text-sm text-foreground"
             >
               <span className="text-amber-400 leading-snug select-none">•</span>
@@ -49,6 +53,6 @@ export default function HeroPanel() {
           ))}
         </div>
       </motion.div>
-    </section>
+    </motion.section>
   );
 }

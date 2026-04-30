@@ -87,14 +87,19 @@ export default {
           to: { height: "0" },
         },
         "pulse-glow": {
-          "0%, 100%": { opacity: "0.4" },
-          "50%": { opacity: "1" },
+          "0%, 100%": { opacity: "0.2" },
+          "50%": { opacity: "0.9" },
+        },
+        shimmer: {
+          from: { backgroundPosition: "-200% center" },
+          to: { backgroundPosition: "200% center" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "pulse-glow": "pulse-glow 3s ease-in-out infinite",
+        shimmer: "shimmer 4s linear infinite",
       },
     },
   },
