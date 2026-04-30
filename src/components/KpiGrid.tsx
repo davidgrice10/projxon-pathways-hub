@@ -27,8 +27,8 @@ export default function KpiGrid() {
   return (
     <section>
       <div className="flex items-center justify-between mb-4">
-        <EyebrowLabel>Impact &amp; Scale</EyebrowLabel>
-        <span className="text-xs text-muted-foreground italic border border-border rounded-full px-3 py-1">Long-term targets</span>
+        <EyebrowLabel>5-Year Plan Targets</EyebrowLabel>
+        <span className="text-xs font-mono text-amber-400 border border-amber-400/30 bg-amber-400/5 rounded-full px-3 py-1">2025 → 2030</span>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
         {metrics.map((m, i) => (
