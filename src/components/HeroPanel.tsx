@@ -7,11 +7,11 @@ const cardStyle: React.CSSProperties = {
 };
 
 export default function HeroPanel() {
-  const outcomes = [
-    "500M+ projected ecosystem revenue",
-    "5M+ individuals impacted",
-    "Global network of universities and employers",
-    "End-to-end talent development platform",
+  const outcomes: { stat: string; rest: string }[] = [
+    { stat: "500M+", rest: " projected ecosystem revenue" },
+    { stat: "5M+", rest: " individuals impacted" },
+    { stat: "Global", rest: " network of universities and employers" },
+    { stat: "End-to-end", rest: " talent development platform" },
   ];
 
   return (
@@ -48,7 +48,7 @@ export default function HeroPanel() {
               className="flex items-start gap-2 text-sm text-foreground"
             >
               <span className="text-amber-400 leading-snug select-none">•</span>
-              <span>{o}</span>
+              <span><span className="text-amber-400 font-semibold">{o.stat}</span>{o.rest}</span>
             </motion.div>
           ))}
         </div>

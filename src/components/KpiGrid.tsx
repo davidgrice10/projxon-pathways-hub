@@ -56,6 +56,11 @@ export default function KpiGrid() {
           </motion.div>
         ))}
       </div>
+      <div className="mt-4 pt-4 border-t border-border flex items-center justify-between gap-3 flex-wrap">
+        <p className="text-xs text-muted-foreground">Projected outcomes across people, partnerships, and revenue by 2030.</p>
+        <span className="text-[10px] text-muted-foreground/60 italic">Targets reflect full ecosystem scale</span>
+      </div>
     </section>
   );
 }
+
