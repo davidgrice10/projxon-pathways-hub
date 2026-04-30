@@ -28,13 +28,13 @@ export default function WidgetPanel({ title, subtitle, icon: Icon, items, color 
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-30px" }}
-      transition={{ duration: 0.4 }}
-      whileHover={{ scale: 1.015, transition: { duration: 0.2 } }}
+      initial={{ opacity: 0, y: 30, scale: 0.96 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: "0px" }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      whileHover={{ scale: 1.02, y: -3, transition: { duration: 0.18 } }}
       style={cardStyle}
-      className="rounded-2xl border border-amber-400/15 bg-card hover:border-amber-400/35 transition-all duration-300 ease-out cursor-pointer py-4 px-5"
+      className="rounded-2xl border border-amber-400/15 bg-card hover:border-amber-400/35 hover:shadow-[0_6px_24px_-6px_hsl(43_72%_55%_/_0.35)] transition-all duration-300 ease-out cursor-pointer py-4 px-5"
       onClick={() => setExpanded(!expanded)}
     >
       <div className="flex items-center gap-3">
@@ -51,7 +51,7 @@ export default function WidgetPanel({ title, subtitle, icon: Icon, items, color 
         </div>
         <motion.div
           animate={{ rotate: expanded ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: 0.35 }}
           className="ml-auto opacity-60"
         >
           <ChevronDown size={16} className="text-muted-foreground" />
@@ -60,10 +60,10 @@ export default function WidgetPanel({ title, subtitle, icon: Icon, items, color 
       <AnimatePresence initial={false}>
         {expanded && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            initial={{ height: 0, opacity: 0, y: -8 }}
+            animate={{ height: "auto", opacity: 1, y: 0 }}
+            exit={{ height: 0, opacity: 0, y: -8 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             className="overflow-hidden"
           >
             <ul className="mt-3 space-y-2">
