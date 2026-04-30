@@ -1,4 +1,6 @@
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import PageSkeleton from "@/components/PageSkeleton";
 import BrandHeader from "@/components/BrandHeader";
 import ValueBanner from "@/components/ValueBanner";
 import CountdownPanel from "@/components/CountdownPanel";
@@ -22,7 +24,16 @@ const sectionVariants = {
 };
 
 export default function Index() {
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setLoaded(true), 600);
+    return () => clearTimeout(t);
+  }, []);
+
   return (
+    <>
+      <AnimatePresence>{!loaded && <PageSkeleton key="skeleton" />}</AnimatePresence>
+      {loaded && (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 py-8 space-y-12">
         {/* Brand */}
@@ -45,12 +56,14 @@ export default function Index() {
         />
 
         {/* Ecosystem Map */}
-        <section
-          style={{ boxShadow: "inset 0 1px 0 0 rgba(255,210,80,0.07)" }}
-          className="rounded-2xl border border-amber-400/15 hover:border-amber-400/35 bg-card p-6 md:p-10 transition-all duration-300 ease-out"
-        >
-          <EcosystemMap />
-        </section>
+        <div className="overflow-x-auto w-full">
+          <section
+            style={{ boxShadow: "inset 0 1px 0 0 rgba(255,210,80,0.07)" }}
+            className="overflow-x-auto rounded-2xl border border-amber-400/15 hover:border-amber-400/35 bg-card p-6 md:p-10 transition-all duration-300 ease-out"
+          >
+            <EcosystemMap />
+          </section>
+        </div>
 
         {/* Bridge to KPIs */}
         <SectionBridge text="This ecosystem drives measurable outcomes across people, partnerships, and organizations." />
