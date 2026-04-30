@@ -261,8 +261,16 @@ interface OrthoLine {
   endPoint: Point;
 }
 
-export default function EcosystemMap() {
+interface EcosystemMapProps {
+  onNodeClick?: (label: string) => void;
+}
+
+export default function EcosystemMap({ onNodeClick }: EcosystemMapProps = {}) {
   const [selected, setSelected] = useState<EcoNode | null>(null);
+  const handleSelect = (node: EcoNode) => {
+    setSelected(node);
+    onNodeClick?.(node.label);
+  };
   const [hoveredConn, setHoveredConn] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -341,7 +349,7 @@ export default function EcosystemMap() {
       {/* Tip */}
       <div className="flex items-center justify-center gap-1.5 mb-5 text-muted-foreground text-xs">
         <MousePointerClick size={13} />
-        <span>Click any node to view details</span>
+        <span>Click any node to explore program details</span>
       </div>
 
       {/* Map container */}
