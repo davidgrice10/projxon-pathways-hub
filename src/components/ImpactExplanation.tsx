@@ -54,9 +54,10 @@ const cardStyle: React.CSSProperties = {
 export default function ImpactExplanation() {
   return (
     <section className="mt-8">
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-2">
         <EyebrowLabel>Why These Numbers Matter</EyebrowLabel>
       </div>
+      <p className="text-xs text-muted-foreground mb-4">Each metric represents a milestone in PROJXON's 5-year growth roadmap.</p>
       <div className="space-y-3">
         {items.map((item, i) => (
           <motion.div

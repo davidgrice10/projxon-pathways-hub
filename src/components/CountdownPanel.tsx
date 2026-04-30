@@ -6,10 +6,12 @@ const TARGET_DATE = new Date("2031-01-01T00:00:00").getTime();
 
 function getTimeLeft() {
   const diff = Math.max(0, TARGET_DATE - Date.now());
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const totalDays = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const years = Math.floor(totalDays / 365);
+  const days = totalDays % 365;
   const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
   const minutes = Math.floor((diff / (1000 * 60)) % 60);
-  return { days, hours, minutes };
+  return { years, days, hours, minutes };
 }
 
 function Unit({ value, label }: { value: number; label: string }) {
@@ -61,7 +63,9 @@ export default function CountdownPanel() {
       />
       <div className="relative">
         <EyebrowLabel>Future Fulfilled</EyebrowLabel>
-        <div className="flex justify-center items-end gap-3 md:gap-6 mt-5 mb-5">
+        <div className="flex justify-center items-end gap-3 md:gap-6 mt-5 mb-5 flex-wrap">
+          <Unit value={timeLeft.years} label="Years" />
+          <span className="text-2xl md:text-4xl font-bold font-mono text-amber-400/40 pb-6">:</span>
           <Unit value={timeLeft.days} label="Days" />
           <span className="text-2xl md:text-4xl font-bold font-mono text-amber-400/40 pb-6">:</span>
           <Unit value={timeLeft.hours} label="Hours" />
@@ -71,6 +75,7 @@ export default function CountdownPanel() {
         <p className="text-sm md:text-base text-muted-foreground max-w-prose mx-auto leading-relaxed">
           The moment our ecosystem reaches full scale across talent, education, and employment.
         </p>
+        <p className="text-xs text-amber-400/60 mt-2 font-mono">Target: Full ecosystem scale across talent, education, and employment</p>
       </div>
     </motion.section>
   );

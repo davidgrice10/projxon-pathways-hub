@@ -261,8 +261,16 @@ interface OrthoLine {
   endPoint: Point;
 }
 
-export default function EcosystemMap() {
+interface EcosystemMapProps {
+  onNodeClick?: (label: string) => void;
+}
+
+export default function EcosystemMap({ onNodeClick }: EcosystemMapProps = {}) {
   const [selected, setSelected] = useState<EcoNode | null>(null);
+  const handleSelect = (node: EcoNode) => {
+    setSelected(node);
+    onNodeClick?.(node.label);
+  };
   const [hoveredConn, setHoveredConn] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -341,7 +349,7 @@ export default function EcosystemMap() {
       {/* Tip */}
       <div className="flex items-center justify-center gap-1.5 mb-5 text-muted-foreground text-xs">
         <MousePointerClick size={13} />
-        <span>Click any node to view details</span>
+        <span>Click any node to explore program details</span>
       </div>
 
       {/* Map container */}
@@ -422,13 +430,13 @@ export default function EcosystemMap() {
           {/* B2C Column */}
           <div className="flex flex-col justify-between py-2">
             {b2cNodes.map((node, i) => (
-              <NodeBox key={node.id} node={node} onClick={() => setSelected(node)} delay={0.15 + i * 0.08} ref={setNodeRef(node.id)} dimmed={!!relatedIds && !relatedIds.has(node.id)} highlighted={focusedId === node.id} />
+              <NodeBox key={node.id} node={node} onClick={() => handleSelect(node)} delay={0.15 + i * 0.08} ref={setNodeRef(node.id)} dimmed={!!relatedIds && !relatedIds.has(node.id)} highlighted={focusedId === node.id} />
             ))}
           </div>
 
           {/* Center Column: PROJXON → MOMENTUM → MOP */}
           <div className="flex flex-col items-center justify-between py-2">
-            <NodeBox node={projxonNode} onClick={() => setSelected(projxonNode)} delay={0.1} ref={setNodeRef("projxon")} dimmed={!!relatedIds && !relatedIds.has("projxon")} highlighted={focusedId === "projxon"} />
+            <NodeBox node={projxonNode} onClick={() => handleSelect(projxonNode)} delay={0.1} ref={setNodeRef("projxon")} dimmed={!!relatedIds && !relatedIds.has("projxon")} highlighted={focusedId === "projxon"} />
 
             {(() => {
               const momDimmed = !!relatedIds && !relatedIds.has("momentum");
@@ -436,7 +444,7 @@ export default function EcosystemMap() {
               return (
                 <motion.button
                   ref={setNodeRef("momentum")}
-                  onClick={() => setSelected(momentumNode)}
+                  onClick={() => handleSelect(momentumNode)}
                   className="w-full border-[1.5px] border-primary/90 rounded-xl py-12 px-7 text-center cursor-pointer"
                   style={{
                     background: "linear-gradient(160deg, hsl(220, 45%, 18%), hsl(220, 35%, 10%))",
@@ -459,13 +467,13 @@ export default function EcosystemMap() {
               );
             })()}
 
-            <NodeBox node={mopNode} onClick={() => setSelected(mopNode)} delay={0.7} ref={setNodeRef("mop")} dimmed={!!relatedIds && !relatedIds.has("mop")} highlighted={focusedId === "mop"} />
+            <NodeBox node={mopNode} onClick={() => handleSelect(mopNode)} delay={0.7} ref={setNodeRef("mop")} dimmed={!!relatedIds && !relatedIds.has("mop")} highlighted={focusedId === "mop"} />
           </div>
 
           {/* B2B Column */}
           <div className="flex flex-col justify-between py-2">
             {b2bNodes.map((node, i) => (
-              <NodeBox key={node.id} node={node} onClick={() => setSelected(node)} delay={0.15 + i * 0.08} ref={setNodeRef(node.id)} dimmed={!!relatedIds && !relatedIds.has(node.id)} highlighted={focusedId === node.id} />
+              <NodeBox key={node.id} node={node} onClick={() => handleSelect(node)} delay={0.15 + i * 0.08} ref={setNodeRef(node.id)} dimmed={!!relatedIds && !relatedIds.has(node.id)} highlighted={focusedId === node.id} />
             ))}
           </div>
         </div>
