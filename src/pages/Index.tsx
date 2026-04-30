@@ -122,5 +122,8 @@ export default function Index() {
         </motion.footer>
       </div>
     </div>
+      )}
+    </>
   );
 }
+
