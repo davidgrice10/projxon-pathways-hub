@@ -56,7 +56,7 @@ export default function Index() {
         <SectionBridge text="This ecosystem drives measurable outcomes across people, partnerships, and organizations." />
 
         {/* KPIs */}
-        <motion.div variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}>
+        <motion.div variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }}>
           <KpiGrid />
           <ImpactExplanation />
         </motion.div>
@@ -65,7 +65,7 @@ export default function Index() {
         <motion.section
           style={{ boxShadow: "inset 0 1px 0 0 rgba(255,210,80,0.07)" }}
           className="rounded-2xl border border-amber-400/15 hover:border-amber-400/35 bg-card p-6 md:p-8 transition-all duration-300 ease-out"
-          variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}
+          variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }}
         >
           <ProgramStack />
         </motion.section>
@@ -88,7 +88,7 @@ export default function Index() {
               key={widget.title}
               initial={{ opacity: 0, y: 20, scale: 0.97 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true, margin: "-30px" }}
+              viewport={{ once: true, margin: "0px" }}
               transition={{ delay: (i % 3) * 0.1, duration: 0.45 }}
             >
               <WidgetPanel {...widget} />
