@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PageSkeleton from "@/components/PageSkeleton";
+import NodeDrawer from "@/components/NodeDrawer";
 import BrandHeader from "@/components/BrandHeader";
 import ValueBanner from "@/components/ValueBanner";
 import CountdownPanel from "@/components/CountdownPanel";
@@ -25,6 +26,7 @@ const sectionVariants = {
 
 export default function Index() {
   const [loaded, setLoaded] = useState(false);
+  const [selectedNode, setSelectedNode] = useState<string | null>(null);
   useEffect(() => {
     const t = setTimeout(() => setLoaded(true), 600);
     return () => clearTimeout(t);
@@ -61,9 +63,12 @@ export default function Index() {
             style={{ boxShadow: "inset 0 1px 0 0 rgba(255,210,80,0.07)" }}
             className="overflow-x-auto rounded-2xl border border-amber-400/15 hover:border-amber-400/35 bg-card p-6 md:p-10 transition-all duration-300 ease-out"
           >
-            <EcosystemMap />
+            <EcosystemMap onNodeClick={(label) => setSelectedNode(label)} />
           </section>
         </div>
+
+        {/* Ecosystem node detail drawer */}
+        <NodeDrawer nodeLabel={selectedNode} onClose={() => setSelectedNode(null)} />
 
         {/* Bridge to KPIs */}
         <SectionBridge text="This ecosystem drives measurable outcomes across people, partnerships, and organizations." />
