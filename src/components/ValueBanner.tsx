@@ -24,7 +24,7 @@ export default function ValueBanner() {
         }}
       />
       <div className="relative max-w-3xl mx-auto">
-        <h2 className="font-heading font-bold text-2xl md:text-4xl text-foreground leading-tight tracking-tight">
+        <h2 className="font-heading font-bold text-xl md:text-2xl lg:text-4xl text-foreground leading-tight tracking-tight">
           We Build Workforce Systems That Scale Teams
         </h2>
         <p className="text-sm md:text-base text-muted-foreground mt-3 leading-relaxed max-w-prose mx-auto">

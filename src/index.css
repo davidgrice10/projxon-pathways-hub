@@ -130,3 +130,20 @@
     letter-spacing: 0.2em;
   }
 }
+
+@media print {
+  .export-pdf-btn { display: none !important; }
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  *, *::before, *::after {
+    color: #000000 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
