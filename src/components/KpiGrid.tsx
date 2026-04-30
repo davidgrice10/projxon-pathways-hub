@@ -34,18 +34,24 @@ export default function KpiGrid() {
         {metrics.map((m, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 35 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ delay: i * 0.08, duration: 0.4 }}
-            whileHover={{ y: -2, transition: { duration: 0.2 } }}
+            viewport={{ once: true, margin: "0px" }}
+            transition={{ delay: i * 0.12, duration: 0.5 }}
+            whileHover={{ y: -6, scale: 1.03, transition: { duration: 0.2 } }}
             style={cardStyle}
-            className="rounded-xl border border-amber-400/15 hover:border-amber-400/35 bg-card p-5 text-center transition-all duration-300 ease-out"
+            className="rounded-xl border border-amber-400/15 hover:border-amber-400/35 hover:shadow-[0_8px_30px_-8px_hsl(43_72%_55%_/_0.4)] bg-card p-5 text-center transition-all duration-300 ease-out"
           >
             <div className={`rounded-lg p-2 w-9 h-9 flex items-center justify-center mx-auto mb-3 ${iconColorMap[m.color]}`}>
               <m.icon className="w-4 h-4" />
             </div>
-            <p className="text-3xl md:text-4xl font-bold text-amber-400 tabular-nums leading-none">{m.value}</p>
+            <motion.p
+              animate={{ opacity: [0.7, 1, 0.7] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
+              className="text-3xl md:text-4xl font-bold text-amber-400 tabular-nums leading-none"
+            >
+              {m.value}
+            </motion.p>
             <p className="text-xs text-muted-foreground uppercase tracking-wider mt-2">{m.label}</p>
           </motion.div>
         ))}

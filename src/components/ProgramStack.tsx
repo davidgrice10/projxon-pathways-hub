@@ -33,10 +33,11 @@ export default function ProgramStack() {
         {layers.map((layer, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-30px" }}
-            transition={{ delay: i * 0.12, duration: 0.4 }}
+            viewport={{ once: true, margin: "0px" }}
+            transition={{ delay: i * 0.18, duration: 0.55 }}
+            whileHover={{ x: 4, transition: { duration: 0.2 } }}
             style={cardStyle}
             className="rounded-2xl border border-amber-400/15 hover:border-amber-400/35 bg-card p-5 transition-all duration-300 ease-out"
           >
