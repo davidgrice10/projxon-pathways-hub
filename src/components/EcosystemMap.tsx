@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback, forwardRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { X, MousePointerClick } from "lucide-react";
+import { motion } from "framer-motion";
+import { MousePointerClick } from "lucide-react";
 
 interface NodeSections {
   what: string;
