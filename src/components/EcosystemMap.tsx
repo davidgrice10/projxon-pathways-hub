@@ -452,11 +452,11 @@ export default function EcosystemMap({ onNodeClick }: EcosystemMapProps = {}) {
                       ? "0 0 0 1px hsl(43, 72%, 55%, 0.4), 0 12px 40px -12px hsl(43, 72%, 55%, 0.7), inset 0 1px 0 hsl(43, 72%, 55%, 0.15)"
                       : "0 0 0 1px hsl(43, 72%, 55%, 0.15), 0 8px 32px -12px hsl(43, 72%, 55%, 0.4), inset 0 1px 0 hsl(43, 72%, 55%, 0.1)",
                     opacity: momDimmed ? 0.28 : 1,
-                    transition: "opacity 0.3s, box-shadow 0.3s",
+                    transition: "box-shadow 0.3s",
                   }}
                   initial={{ opacity: 0, scale: 0.92 }}
                   animate={{ opacity: momDimmed ? 0.28 : 1, scale: 1 }}
-                  transition={{ delay: 0.3, type: "spring", stiffness: 160, damping: 20 }}
+                  transition={{ delay: 0.3, type: "spring", stiffness: 160, damping: 20, opacity: { duration: 0.25, ease: "easeOut" } }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -496,11 +496,11 @@ const NodeBox = forwardRef<HTMLButtonElement, { node: EcoNode; onClick: () => vo
             ? `0 1px 0 hsl(0, 0%, 100%, 0.06) inset, ${nodeGlow[node.color]}, 0 0 32px -10px currentColor`
             : `0 1px 0 hsl(0, 0%, 100%, 0.04) inset, ${nodeGlow[node.color]}`,
           opacity: dimmed ? 0.28 : 1,
-          transition: "opacity 0.3s ease, box-shadow 0.3s ease",
+          transition: "box-shadow 0.3s ease",
         }}
         initial={{ opacity: 0, scale: 0.92, y: 8 }}
         animate={{ opacity: dimmed ? 0.28 : 1, scale: highlighted ? 1.03 : 1, y: 0 }}
-        transition={{ delay, type: "spring", stiffness: 180, damping: 20 }}
+        transition={{ delay, type: "spring", stiffness: 180, damping: 20, opacity: { duration: 0.25, ease: "easeOut" } }}
         whileHover={{ scale: highlighted ? 1.04 : 1.02, y: -1 }}
         whileTap={{ scale: 0.98 }}
       >
