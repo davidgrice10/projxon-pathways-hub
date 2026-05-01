@@ -12,6 +12,7 @@ import EcosystemMap from "@/components/EcosystemMap";
 import ProgramStack from "@/components/ProgramStack";
 import WidgetPanel from "@/components/WidgetPanel";
 import ImpactSummary from "@/components/ImpactSummary";
+import PartnerEcosystem from "@/components/PartnerEcosystem";
 import SectionLabel from "@/components/SectionLabel";
 import SectionBridge from "@/components/SectionBridge";
 import {
@@ -95,6 +96,17 @@ export default function Index() {
           variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }}
         >
           <ProgramStack />
+        </motion.section>
+
+        {/* Partner Ecosystem */}
+        <motion.section
+          variants={sectionVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "0px" }}
+          className="rounded-2xl border border-border bg-card p-6 md:p-10"
+        >
+          <PartnerEcosystem />
         </motion.section>
 
         {/* Widget Grid */}
