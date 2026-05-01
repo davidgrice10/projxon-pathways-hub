@@ -32,6 +32,15 @@ export default function Index() {
     return () => clearTimeout(t);
   }, []);
 
+  useEffect(() => {
+    if (selectedNode) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [selectedNode]);
+
   return (
     <>
       <AnimatePresence>{!loaded && <PageSkeleton key="skeleton" />}</AnimatePresence>

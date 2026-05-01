@@ -76,9 +76,33 @@ export default function NodeDrawer({ nodeLabel, onClose }: NodeDrawerProps) {
                     {detail.layer}
                   </span>
                   <p className="text-sm text-amber-400/80 italic">{detail.tagline}</p>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {detail.description}
-                  </p>
+
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest text-amber-400 font-heading mb-1">What it is</p>
+                    <p className="text-sm text-foreground leading-snug">{detail.sections.what}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest text-amber-400 font-heading mb-1">Why it matters</p>
+                    <p className="text-sm text-foreground leading-snug">{detail.sections.why}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest text-amber-400 font-heading mb-1.5">How it connects</p>
+                    <ul className="space-y-1.5">
+                      {detail.sections.connects.map((c, i) => (
+                        <motion.li
+                          key={i}
+                          initial={{ opacity: 0, x: -8 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.1 + i * 0.05 }}
+                          className="flex items-start gap-2 text-sm text-foreground"
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0 mt-1.5" />
+                          {c}
+                        </motion.li>
+                      ))}
+                    </ul>
+                  </div>
+
                   {detail.metrics && detail.metrics.length > 0 && (
                     <div className="grid grid-cols-2 gap-3">
                       {detail.metrics.map((m) => (
