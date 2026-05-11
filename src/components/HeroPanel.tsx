@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Rocket } from "lucide-react";
 import EyebrowLabel from "./EyebrowLabel";
+import ProjectLogo from "@/components/ProjectLogo";
 
 const cardStyle: React.CSSProperties = {
   boxShadow: "inset 0 1px 0 0 rgba(255,210,80,0.07)",
