@@ -494,12 +494,11 @@ const NodeBox = forwardRef<HTMLButtonElement, { node: EcoNode; onClick: () => vo
           boxShadow: highlighted
             ? `0 1px 0 hsl(0, 0%, 100%, 0.06) inset, ${nodeGlow[node.color]}, 0 0 32px -10px currentColor`
             : `0 1px 0 hsl(0, 0%, 100%, 0.04) inset, ${nodeGlow[node.color]}`,
-          opacity: dimmed ? 0.28 : 1,
           transition: "box-shadow 0.3s ease",
         }}
         initial={{ opacity: 0, scale: 0.92, y: 8 }}
         animate={{ opacity: dimmed ? 0.28 : 1, scale: highlighted ? 1.03 : 1, y: 0 }}
-        transition={{ delay, type: "spring", stiffness: 180, damping: 20, opacity: { duration: 0.25, ease: "easeOut" } }}
+        transition={{ delay, scale: { type: "spring", stiffness: 180, damping: 20 }, y: { type: "spring", stiffness: 180, damping: 20 }, opacity: { duration: 0.25, ease: "easeOut" } }}
         whileHover={{ scale: highlighted ? 1.04 : 1.02, y: -1 }}
         whileTap={{ scale: 0.98 }}
       >
