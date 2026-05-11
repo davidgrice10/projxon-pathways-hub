@@ -149,7 +149,10 @@ export default function Index() {
           initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <p className="text-muted-foreground text-sm font-heading">PROJXON Ecosystem Dashboard</p>
+          <div className="flex flex-col items-center gap-2">
+            <ProjectLogo variant="outline" className="text-sm" />
+            <p className="text-muted-foreground text-sm font-heading">Ecosystem Dashboard · 2025–2030</p>
+          </div>
         </motion.footer>
       </div>
     </div>
