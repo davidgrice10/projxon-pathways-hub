@@ -13,6 +13,8 @@ import ProgramStack from "@/components/ProgramStack";
 import WidgetPanel from "@/components/WidgetPanel";
 import ImpactSummary from "@/components/ImpactSummary";
 import PartnerEcosystem from "@/components/PartnerEcosystem";
+import PartnerStrip from "@/components/PartnerStrip";
+import ProjectLogo from "@/components/ProjectLogo";
 import SectionLabel from "@/components/SectionLabel";
 import SectionBridge from "@/components/SectionBridge";
 import {
