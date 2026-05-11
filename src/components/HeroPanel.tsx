@@ -24,6 +24,9 @@ export default function HeroPanel() {
       style={cardStyle}
       className="relative overflow-hidden rounded-2xl border border-amber-400/15 hover:border-amber-400/35 bg-card p-8 md:p-10 transition-all duration-300 ease-out"
     >
+      <div className="absolute bottom-4 right-4">
+        <ProjectLogo variant="watermark" />
+      </div>
       <motion.div
         initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
         className="relative"
