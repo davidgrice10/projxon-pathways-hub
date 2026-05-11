@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Download } from "lucide-react";
+import ProjectLogo from "@/components/ProjectLogo";
 
 export default function BrandHeader() {
   return (
