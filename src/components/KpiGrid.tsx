@@ -30,7 +30,7 @@ export default function KpiGrid() {
         <EyebrowLabel>5-Year Plan Targets</EyebrowLabel>
         <span className="text-xs font-mono text-amber-400 border border-amber-400/30 bg-amber-400/5 rounded-full px-3 py-1">2025 → 2030</span>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 min-w-0">
         {metrics.map((m, i) => (
           <motion.div
             key={i}
@@ -48,7 +48,7 @@ export default function KpiGrid() {
             <motion.p
               animate={{ opacity: [0.7, 1, 0.7] }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
-              className="text-xl sm:text-2xl md:text-3xl font-bold text-amber-400 tabular-nums leading-tight w-full"
+              className="text-lg sm:text-xl md:text-2xl font-bold text-amber-400 tabular-nums leading-tight w-full break-words overflow-hidden"
             >
               {m.value}
             </motion.p>
