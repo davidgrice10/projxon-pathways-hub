@@ -85,6 +85,9 @@ export default function Index() {
         {/* Bridge to KPIs */}
         <SectionBridge text="This ecosystem drives measurable outcomes across people, partnerships, and organizations." />
 
+        {/* Partner Strip */}
+        <PartnerStrip />
+
         {/* KPIs */}
         <motion.div variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }}>
           <KpiGrid />
