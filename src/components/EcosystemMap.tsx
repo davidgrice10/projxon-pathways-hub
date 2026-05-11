@@ -451,12 +451,11 @@ export default function EcosystemMap({ onNodeClick }: EcosystemMapProps = {}) {
                     boxShadow: momHighlighted
                       ? "0 0 0 1px hsl(43, 72%, 55%, 0.4), 0 12px 40px -12px hsl(43, 72%, 55%, 0.7), inset 0 1px 0 hsl(43, 72%, 55%, 0.15)"
                       : "0 0 0 1px hsl(43, 72%, 55%, 0.15), 0 8px 32px -12px hsl(43, 72%, 55%, 0.4), inset 0 1px 0 hsl(43, 72%, 55%, 0.1)",
-                    opacity: momDimmed ? 0.28 : 1,
                     transition: "box-shadow 0.3s",
                   }}
                   initial={{ opacity: 0, scale: 0.92 }}
                   animate={{ opacity: momDimmed ? 0.28 : 1, scale: 1 }}
-                  transition={{ delay: 0.3, type: "spring", stiffness: 160, damping: 20, opacity: { duration: 0.25, ease: "easeOut" } }}
+                  transition={{ delay: 0.3, scale: { type: "spring", stiffness: 160, damping: 20 }, opacity: { duration: 0.25, ease: "easeOut" } }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
