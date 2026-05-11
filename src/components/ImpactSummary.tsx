@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import EyebrowLabel from "./EyebrowLabel";
+import ProjectLogo from "@/components/ProjectLogo";
 
 const items = [
   "Companies scale from small teams into full operations",
