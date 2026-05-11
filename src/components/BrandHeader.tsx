@@ -12,9 +12,12 @@ export default function BrandHeader() {
     >
       {/* Spacer to keep the wordmark visually centered */}
       <span className="w-[110px]" aria-hidden="true" />
-      <span className="font-heading font-bold text-xl md:text-2xl text-amber-400 tracking-widest select-none">
-        PROJXON
-      </span>
+      <div className="flex items-center gap-3">
+        <ProjectLogo variant="full" size="sm" />
+        <span className="font-heading font-bold text-xl md:text-2xl text-amber-400 tracking-widest select-none">
+          PROJXON
+        </span>
+      </div>
       <button
         onClick={() => window.print()}
         className="export-pdf-btn flex items-center gap-1.5 text-xs text-muted-foreground hover:text-amber-400 border border-border hover:border-amber-400/40 rounded-full px-3 py-1.5 transition-all duration-200"
