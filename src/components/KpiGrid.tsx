@@ -60,6 +60,9 @@ export default function KpiGrid() {
         <p className="text-xs text-muted-foreground">Projected outcomes across people, partnerships, and revenue by 2030.</p>
         <span className="text-[10px] text-muted-foreground/60 italic">Targets reflect full ecosystem scale</span>
       </div>
+      <div className="mt-2 text-[10px] text-muted-foreground/60 uppercase tracking-[0.2em] text-right">
+        Updated Q2 2026
+      </div>
     </section>
   );
 }
