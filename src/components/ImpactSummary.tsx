@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import EyebrowLabel from "./EyebrowLabel";
+import ProjectLogo from "@/components/ProjectLogo";
 
 const items = [
   "Companies scale from small teams into full operations",
@@ -20,6 +21,7 @@ export default function ImpactSummary() {
     >
       <div className="text-center mb-6 flex flex-col items-center gap-3">
         <EyebrowLabel>Ecosystem Impact</EyebrowLabel>
+        <ProjectLogo variant="monogram" />
         <h2 className="text-2xl md:text-3xl font-bold font-heading text-foreground leading-tight">
           What This Means
         </h2>

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Building2 } from "lucide-react";
+import { Building2, ArrowUpRight } from "lucide-react";
 import { partnerCategories, type PartnerColor } from "@/data/partnerData";
 
 const labelColor: Record<PartnerColor, string> = {
@@ -21,6 +21,13 @@ const cardGlowHover: Record<PartnerColor, string> = {
   gold: "hover:shadow-[0_4px_20px_-6px_hsl(43,72%,55%,0.3)]",
   green: "hover:shadow-[0_4px_20px_-6px_hsl(145,45%,50%,0.3)]",
   orange: "hover:shadow-[0_4px_20px_-6px_hsl(30,65%,55%,0.3)]",
+};
+
+const dotColor: Record<PartnerColor, string> = {
+  blue: "bg-blue-400/60",
+  gold: "bg-amber-400/60",
+  green: "bg-emerald-400/60",
+  orange: "bg-orange-400/40",
 };
 
 export default function PartnerEcosystem() {
@@ -81,16 +88,39 @@ export default function PartnerEcosystem() {
                     ease: "easeOut",
                   }}
                   whileHover={{ y: -2, transition: { duration: 0.18 } }}
-                  className={`rounded-xl border bg-card px-4 py-3 cursor-default transition-all duration-200 ${
-                    isComingSoon ? "border-dashed border-border/60 opacity-70" : "border-border"
+                  className={`group relative rounded-xl border bg-card px-4 py-3 cursor-default transition-all duration-200 ${
+                    isComingSoon
+                      ? "border-dashed border-border/60 opacity-70 group-hover:opacity-90 hover:opacity-90"
+                      : "border-border"
                   } ${cardBorderHover[category.color]} ${cardGlowHover[category.color]}`}
                 >
-                  <div className="text-sm font-semibold text-foreground leading-tight">
+                  {/* Category dot */}
+                  <span
+                    className={`absolute top-2 right-2 w-1.5 h-1.5 rounded-full ${dotColor[category.color]}`}
+                  />
+
+                  <div className="text-sm font-semibold text-foreground leading-tight pr-3">
                     {partner.name}
                   </div>
                   <div className="text-xs text-muted-foreground mt-0.5 leading-tight">
                     {partner.subtitle}
                   </div>
+
+                  {/* Hover reveal */}
+                  {isComingSoon ? (
+                    <div className="mt-2 max-h-0 overflow-hidden opacity-0 group-hover:max-h-8 group-hover:opacity-100 transition-all duration-200">
+                      <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.15em] text-orange-400/80">
+                        Coming Soon
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="mt-2 max-h-0 overflow-hidden opacity-0 group-hover:max-h-8 group-hover:opacity-100 transition-all duration-200">
+                      <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.15em] text-muted-foreground/80">
+                        View details
+                        <ArrowUpRight className="w-3 h-3" />
+                      </span>
+                    </div>
+                  )}
                 </motion.div>
               );
             })}
@@ -99,9 +129,14 @@ export default function PartnerEcosystem() {
       </div>
 
       {/* Footer */}
-      <p className="text-xs text-muted-foreground/70 text-center mt-8 italic">
-        Partner network actively growing — updated quarterly.
-      </p>
+      <div className="mt-8 flex items-center justify-between gap-3 flex-wrap">
+        <p className="text-xs text-muted-foreground/70 italic">
+          Partner network actively growing.
+        </p>
+        <span className="text-[10px] text-muted-foreground/60 uppercase tracking-[0.2em]">
+          Active as of Q2 2026
+        </span>
+      </div>
     </div>
   );
 }

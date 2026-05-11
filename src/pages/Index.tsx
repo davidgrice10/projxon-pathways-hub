@@ -13,6 +13,8 @@ import ProgramStack from "@/components/ProgramStack";
 import WidgetPanel from "@/components/WidgetPanel";
 import ImpactSummary from "@/components/ImpactSummary";
 import PartnerEcosystem from "@/components/PartnerEcosystem";
+import PartnerStrip from "@/components/PartnerStrip";
+import ProjectLogo from "@/components/ProjectLogo";
 import SectionLabel from "@/components/SectionLabel";
 import SectionBridge from "@/components/SectionBridge";
 import {
@@ -83,6 +85,9 @@ export default function Index() {
         {/* Bridge to KPIs */}
         <SectionBridge text="This ecosystem drives measurable outcomes across people, partnerships, and organizations." />
 
+        {/* Partner Strip */}
+        <PartnerStrip />
+
         {/* KPIs */}
         <motion.div variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }}>
           <KpiGrid />
@@ -144,7 +149,10 @@ export default function Index() {
           initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <p className="text-muted-foreground text-sm font-heading">PROJXON Ecosystem Dashboard</p>
+          <div className="flex flex-col items-center gap-2">
+            <ProjectLogo variant="outline" className="text-sm" />
+            <p className="text-muted-foreground text-sm font-heading">Ecosystem Dashboard · 2025–2030</p>
+          </div>
         </motion.footer>
       </div>
     </div>
